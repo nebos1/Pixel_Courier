@@ -10,20 +10,24 @@
 
 
 // function for movement
-inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height) {
+inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height, Textures& textures, const std::vector<sf::Sprite*>& CollisionObjects) {
     sf::Vector2f movement(0.0f, 0.0f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         movement.x -= speed;
+		player.setTexture(textures.left_courier); // Change texture to left view
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         movement.x += speed;
+		player.setTexture(textures.right_courier); // Change texture to right view
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         movement.y -= speed;
+		player.setTexture(textures.back_courier); // Change texture to up view
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         movement.y += speed;
+		player.setTexture(textures.front_courier); // Change texture to down view
     }
 
     // Move the player
@@ -43,6 +47,7 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
 
     // Apply corrected position
     player.setPosition(pos);
+
 }
 
 

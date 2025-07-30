@@ -22,7 +22,6 @@ public:
 	sf::Sprite back_courier;
 	sf::Sprite left_courier;
 	sf::Sprite right_courier;
-	sf::Sprite backpack_courier;
 
 	// Buildings 
 	sf::Sprite house_1;

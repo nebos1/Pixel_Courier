@@ -10,7 +10,10 @@
 
 
 int main() {
-    // window used for 2d drawing
+    // pixelisation and window used for 2d drawing 
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+
     sf::RenderWindow window(sf::VideoMode(1280, 708), "Pixel Courier");
     window.setFramerateLimit(60);
 
@@ -45,7 +48,7 @@ int main() {
         }
 
         // player movement 
-        HandlePlayerMovement(sprites.player, 2.0f, map_width, map_height);
+        HandlePlayerMovement(sprites.player, 2.0f, map_width, map_height, textures, sprites.CollisionObjects);
 
         // camera follows the player but stays inside map bounds
         HandleCameraView(sprites.player, camera, map_width, map_height);
