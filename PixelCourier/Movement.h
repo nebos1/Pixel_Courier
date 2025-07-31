@@ -30,7 +30,6 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
 		player.setTexture(textures.front_courier); // Change texture to down view
     }
 
-    // Move the player
     player.move(movement);
 
     // Clamp player's position so he cannot leave the map
@@ -41,7 +40,6 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
     if (pos.x < 0.f) pos.x = 0.f;
     if (pos.y < 0.f) pos.y = 0.f;
 
-    // Right and bottom boundaries (consider sprite size)
     if (pos.x + bounds.width > map_width) pos.x = map_width - bounds.width;
     if (pos.y + bounds.height > map_height) pos.y = map_height - bounds.height;
 
@@ -49,8 +47,6 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
     player.setPosition(pos);
 
 }
-
-
 
 
 // function for camera movement + vision  
