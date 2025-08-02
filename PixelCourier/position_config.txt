@@ -1,0 +1,13 @@
+player 30 670
+
+house_1 280 535
+block_1 260 170
+courier_house 0 600
+church_1 800 250
+
+bush_1 120 520
+sunbed_1 124 200
+blue_umbrella_1 200 200
+tree_1 670 515
+
+
