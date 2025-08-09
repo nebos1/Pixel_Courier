@@ -1,4 +1,5 @@
-// apply positions to all objects on the map using txt file
+// apply positions to all static objects on the map using txt file
+// apply starting position to the player
 
 #pragma once
 
@@ -8,7 +9,9 @@
 #include "Sprites_load.h"
 
 #include <fstream>
-#include <unordered_map>
+#include <map>
+#include <string>
+#include <iostream>
 
 // TODO: add few more same objects, few more diff + moving cars with collision logic gameover
 
@@ -21,42 +24,95 @@ public:
 		std::ifstream file("PixelCourier/position_config.txt");
 
 		if (!file.is_open()) {
-			std::cout << "not found the txt!\n";
+			std::cerr << "not found the txt!\n";
 			return;
 		}
 
 		ObjectPositions.clear();
 
+		// clear the old vectors of all objects before filling them with new sprites and textures for loading
+		sprites.house_1.clear();
+		sprites.block_1.clear();
+		sprites.courier_house.clear();
+		sprites.church_1.clear();
+
+		sprites.bush_1.clear();
+		sprites.sunbed_1.clear();
+		sprites.blue_umbrella_1.clear();
+		sprites.tree_1.clear();
+
+
 		std::string name;
 		float x_coords, y_coords;
+		while (file >> name >> x_coords >> y_coords) {
+			if (name == "player") {
+				sprites.player.setTexture(textures.player);
+				sprites.player.setPosition(x_coords, y_coords);
+				ObjectPositions[&sprites.player] = { x_coords, y_coords };
+			}
+			else if (name == "house_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.house_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.house_1.push_back(sprite);
+				ObjectPositions[&sprites.house_1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "block_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.block_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.block_1.push_back(sprite);
+				ObjectPositions[&sprites.block_1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "courier_house") {
+				sf::Sprite sprite; sprite.setTexture(textures.courier_house);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.courier_house.push_back(sprite);
+				ObjectPositions[&sprites.courier_house.back()] = { x_coords, y_coords };
+			}
+			else if (name == "church_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.church_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.church_1.push_back(sprite);
+				ObjectPositions[&sprites.church_1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "bush_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.bush_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.bush_1.push_back(sprite);
+				ObjectPositions[&sprites.bush_1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "sunbed_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.sunbed_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.sunbed_1.push_back(sprite);
+				ObjectPositions[&sprites.sunbed_1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "blue_umbrella_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.blue_umbrella_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.blue_umbrella_1.push_back(sprite);
+				ObjectPositions[&sprites.blue_umbrella_1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "tree_1") {
+				sf::Sprite sprite; sprite.setTexture(textures.tree_1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.tree_1.push_back(sprite);
+				ObjectPositions[&sprites.tree_1.back()] = { x_coords, y_coords };
+			}
+		}
 
-		// positions
-		std::unordered_map<std::string, sf::Sprite*> NameToSprite = {
-			// starting player position
-			{"player", &sprites.player},
-			// buildings
-			{"house_1", &sprites.house_1},
-			{"block_1", &sprites.block_1},
-			{"courier_house", &sprites.courier_house},
-			{"church_1", &sprites.church_1},
-			{"bush_1", &sprites.bush_1},
-			// others
-			{"sunbed_1", &sprites.sunbed_1},
-			{"blue_umbrella_1", &sprites.blue_umbrella_1},
-			{"tree_1", &sprites.tree_1},
-			{"bush_1", &sprites.bush_1}
+
+		// TO FIX!!!!!!!!!!!!!!!!!!
+		// CollisionObjects with pointers
+		sprites.CollisionObjects.clear();
+		sprites.CollisionObjects.push_back(&sprites.player);
+
+		auto AddPointerToCollision = [&](auto& object_vector) {
+			for (auto& obj : object_vector) {
+				sprites.CollisionObjects.push_back(&obj);
+			}
 		};
 
-		
-		while (file >> name >> x_coords >> y_coords) {
-			// search the name
-			auto it = NameToSprite.find(name);
-			if (it == NameToSprite.end()) continue;
 
-			sf::Sprite* sprite = it->second;
-			sprite->setPosition(x_coords, y_coords);
-			ObjectPositions[sprite] = sf::Vector2f(x_coords, y_coords);
-		}
-		std::cout << "  load positions " << ObjectPositions.size() << "\n";
-	}
+		std::cout << "loading positions..." << ObjectPositions.size() << "\n";
+	};
 };

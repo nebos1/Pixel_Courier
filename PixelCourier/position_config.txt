@@ -1,13 +1,114 @@
-player 30 670
+player 1400 1550
 
-house_1 280 535
-block_1 260 170
-courier_house 0 600
-church_1 800 250
+house_1 290 535
+house_1 350 535
+house_1 410 535
+house_1 470 535
+house_1 530 535
+house_1 700 395
+house_1 760 395
+house_1 820 395
+house_1 880 395
+house_1 940 395
+house_1 1000 395
 
-bush_1 120 520
-sunbed_1 124 200
-blue_umbrella_1 200 200
-tree_1 670 515
+block_1 0 1215
+block_1 70 1215
+block_1 140 1215
+block_1 210 1215
+block_1 280 1215
+block_1 350 1215
+block_1 420 1215
+block_1 490 1215
+block_1 560 1215
+block_1 630 1215
+block_1 700 1215
+block_1 770 1215
+block_1 840 1215
+block_1 910 1215
+block_1 980 1215
+block_1 1050 1215
+block_1 1120 1215
+block_1 1190 1215
+block_1 1260 1215
+block_1 1330 1215
+block_1 1400 1215
+
+courier_house 20 1680
+
+church_1 750 750
+
+bush_1 -30 1250
+bush_1 50 1250
+bush_1 140 1250
+bush_1 250 1250
+bush_1 340 1250
+bush_1 500 1250
+bush_1 680 1250
+bush_1 770 1250
+bush_1 830 1250
+bush_1 900 1250
+bush_1 1020 1250
+bush_1 1150 1250
+bush_1 1290 1250
+bush_1 1400 1250
+
+	
+sunbed_1 1120 1750
+sunbed_1 1120 1700
+sunbed_1 1190 1620
+sunbed_1 1190 1720
+sunbed_1 1190 1670
+sunbed_1 1260 1590
+sunbed_1 1260 1650
+sunbed_1 1350 1580
+sunbed_1 1330 1620
+
+blue_umbrella_1 1150 1720
+blue_umbrella_1 1150 1670
+blue_umbrella_1 1210 1600
+blue_umbrella_1 1210 1650
+blue_umbrella_1 1210 1700
+blue_umbrella_1 1280 1570
+blue_umbrella_1 1280 1630
+blue_umbrella_1 1350 1600
+blue_umbrella_1 1370 1560
+
+tree_1 -20 215
+tree_1 5 215
+tree_1 35 215
+tree_1 60 215
+tree_1 80 215
+tree_1 110 215
+tree_1 180 215
+tree_1 260 215
+tree_1 290 215
+tree_1 320 215
+tree_1 370 215
+tree_1 400 215
+tree_1 450 215
+tree_1 475 215
+tree_1 500 215
+tree_1 520 215
+tree_1 550 215
+tree_1 590 215
+tree_1 610 215
+tree_1 670 215
+tree_1 730 215
+tree_1 770 215
+tree_1 790 215
+tree_1 840 215
+tree_1 870 215
+tree_1 910 215
+tree_1 960 215
+tree_1 100 215
+tree_1 1070 215
+tree_1 1140 215
+tree_1 1200 215
+tree_1 1290 215
+tree_1 1340 215
+tree_1 1400 215
+tree_1 1460 215
+
 
 

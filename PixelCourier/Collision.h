@@ -47,7 +47,6 @@ public:
 		float width, height, y_offset, x_offset;
 
         while (file >> name >> width >> height >> y_offset >> x_offset) {
-
 			
             // TODO: sprites to be z_index 1, map z_index 0, player z-index 2       where no collision with top parts of buildings and objects
             // TODO: player to be able to go from z-index 2 to z-index 0 (because of top parts of buildings) [he goes behind em]
@@ -58,62 +57,79 @@ public:
             }
 			// building collision boxes
 			else if (name == "block_1") {
-				HitBox[&sprites.block_1] = AdjustHitBox(sprites.block_1, width, height, y_offset, x_offset);
+				for(auto& sprite : sprites.block_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+				}
 			}
 			else if (name == "house_1") {
-				HitBox[&sprites.house_1] = AdjustHitBox(sprites.house_1, width, height, y_offset, x_offset);
-			}
+                for(auto& sprite : sprites.house_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
+            }
             else if (name == "church_1") {
-                HitBox[&sprites.church_1] = AdjustHitBox(sprites.church_1, width, height, y_offset, x_offset);
-			}
+                for(auto& sprite : sprites.church_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
+            }
 			else if (name == "courier_house") {
-				HitBox[&sprites.courier_house] = AdjustHitBox(sprites.courier_house, width, height, y_offset, x_offset);
+                                for(auto& sprite : sprites.courier_house) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
 			}
 			// other objects collision boxes
 			else if (name == "bush_1") {
-				HitBox[&sprites.bush_1] = AdjustHitBox(sprites.bush_1, width, height, y_offset, x_offset);
+                for(auto& sprite : sprites.bush_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
 			}
 			else if (name == "sunbed_1") {
-				HitBox[&sprites.sunbed_1] = AdjustHitBox(sprites.sunbed_1, width, height, y_offset, x_offset);
+            	for(auto& sprite : sprites.sunbed_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
 			}
 			else if (name == "blue_umbrella_1") {
-				HitBox[&sprites.blue_umbrella_1] = AdjustHitBox(sprites.blue_umbrella_1, width, height, y_offset, x_offset);
+                for(auto& sprite : sprites.blue_umbrella_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
 			}
 			else if (name == "tree_1") {
-				HitBox[&sprites.tree_1] = AdjustHitBox(sprites.tree_1, width, height, y_offset, x_offset);
+                for(auto& sprite : sprites.tree_1) {
+                    HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
+                }
 			}
 
-			// vehicles collision boxes
-            else if (name == "car_1_left") {
-                HitBox[&sprites.car_1_left] = AdjustHitBox(sprites.car_1_left, width, height, y_offset, x_offset);
-            }
-            else if (name == "car_1_right") {
-                HitBox[&sprites.car_1_right] = AdjustHitBox(sprites.car_1_right, width, height, y_offset, x_offset);
-            }
-            else if (name == "car_2_left") {
-                HitBox[&sprites.car_2_left] = AdjustHitBox(sprites.car_2_left, width, height, y_offset, x_offset);
-            }
-            else if (name == "car_2_right") {
-                HitBox[&sprites.car_2_right] = AdjustHitBox(sprites.car_2_right, width, height, y_offset, x_offset);
-            }
-            else if (name == "truck_1_left") {
-                HitBox[&sprites.truck_1_left] = AdjustHitBox(sprites.truck_1_left, width, height, y_offset, x_offset);
-            }
-            else if (name == "truck_1_right") {
-                HitBox[&sprites.truck_1_right] = AdjustHitBox(sprites.truck_1_right, width, height, y_offset, x_offset);
-            }
-            else if (name == "pickup_truck_1_left") {
-                HitBox[&sprites.pickup_truck_1_left] = AdjustHitBox(sprites.pickup_truck_1_left, width, height, y_offset, x_offset);
-            }
-            else if (name == "pickup_truck_1_right") {
-                HitBox[&sprites.pickup_truck_1_right] = AdjustHitBox(sprites.pickup_truck_1_right, width, height, y_offset, x_offset);
-            } 
-            else if (name == "bus_1_left") {
-                HitBox[&sprites.bus_1_left] = AdjustHitBox(sprites.bus_1_left, width, height, y_offset, x_offset);
-            }
-            else if (name == "bus_1_right") {
-                HitBox[&sprites.bus_1_right] = AdjustHitBox(sprites.bus_1_right, width, height, y_offset, x_offset);
-			}
+			//// FIX: fix the vehicle collision boxes 
+			//// vehicles collision boxes
+   //         else if (name == "car_1_left") {
+   //             HitBox[&sprites.car_1_left] = AdjustHitBox(sprites.car_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "car_1_right") {
+   //             HitBox[&sprites.car_1_right] = AdjustHitBox(sprites.car_1_right, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "car_2_left") {
+   //             HitBox[&sprites.car_2_left] = AdjustHitBox(sprites.car_2_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "car_2_right") {
+   //             HitBox[&sprites.car_2_right] = AdjustHitBox(sprites.car_2_right, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "truck_1_left") {
+   //             HitBox[&sprites.truck_1_left] = AdjustHitBox(sprites.truck_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "truck_1_right") {
+   //             HitBox[&sprites.truck_1_right] = AdjustHitBox(sprites.truck_1_right, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "pickup_truck_1_left") {
+   //             HitBox[&sprites.pickup_truck_1_left] = AdjustHitBox(sprites.pickup_truck_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "pickup_truck_1_right") {
+   //             HitBox[&sprites.pickup_truck_1_right] = AdjustHitBox(sprites.pickup_truck_1_right, width, height, y_offset, x_offset);
+   //         } 
+   //         else if (name == "bus_1_left") {
+   //             HitBox[&sprites.bus_1_left] = AdjustHitBox(sprites.bus_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "bus_1_right") {
+   //             HitBox[&sprites.bus_1_right] = AdjustHitBox(sprites.bus_1_right, width, height, y_offset, x_offset);
+			//}
 
 			// TODO: add copy of building and others sprites with different positions 
         }   
