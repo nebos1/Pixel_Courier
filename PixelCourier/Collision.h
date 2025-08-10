@@ -22,8 +22,8 @@ inline sf::FloatRect AdjustHitBox(const sf::Sprite& sprite, float WidthFactor, f
     sf::FloatRect relative_bounds;
     relative_bounds.width = global_bounds.width * WidthFactor;
     relative_bounds.height = global_bounds.height * HeightFactor;
-	relative_bounds.left = global_bounds.width * x_offset; 
-	relative_bounds.top = global_bounds.height * y_offset;  
+    relative_bounds.left = global_bounds.width * x_offset;
+    relative_bounds.top = global_bounds.height * y_offset;
     return relative_bounds;
 }
 
@@ -32,7 +32,7 @@ class Collision {
 public:
     std::map<sf::Sprite*, sf::FloatRect> HitBox;
 
-    void Init(Sprites& sprites) {
+    void AddHitBox(Sprites& sprites) {
         std::ifstream file("PixelCourier/hitbox_config.txt");
 
 
@@ -44,71 +44,97 @@ public:
         HitBox.clear();
 
         std::string name;
-		float width, height, y_offset, x_offset;
+        float width, height, y_offset, x_offset;
 
         while (file >> name >> width >> height >> y_offset >> x_offset) {
-			
-            // TODO: sprites to be z_index 1, map z_index 0, player z-index 2       where no collision with top parts of buildings and objects
-            // TODO: player to be able to go from z-index 2 to z-index 0 (because of top parts of buildings) [he goes behind em]
 
             //player collision box
             if (name == "player") {
                 HitBox[&sprites.player] = AdjustHitBox(sprites.player, width, height, y_offset, x_offset);
             }
-			// building collision boxes
-			else if (name == "block_1") {
-				for(auto& sprite : sprites.block_1) {
+            // building collision boxes
+            else if (name == "block_1") {
+                for (auto& sprite : sprites.block_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-				}
-			}
-			else if (name == "house_1") {
-                for(auto& sprite : sprites.house_1) {
+                }
+            }
+            else if (name == "house_1") {
+                for (auto& sprite : sprites.house_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
             }
             else if (name == "church_1") {
-                for(auto& sprite : sprites.church_1) {
+                for (auto& sprite : sprites.church_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
             }
-			else if (name == "courier_house") {
-                                for(auto& sprite : sprites.courier_house) {
+            else if (name == "courier_house") {
+                for (auto& sprite : sprites.courier_house) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
-			}
-			// other objects collision boxes
-			else if (name == "bush_1") {
-                for(auto& sprite : sprites.bush_1) {
+            }
+            // other objects collision boxes
+            else if (name == "bush_1") {
+                for (auto& sprite : sprites.bush_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
-			}
-			else if (name == "sunbed_1") {
-            	for(auto& sprite : sprites.sunbed_1) {
+            }
+            else if (name == "sunbed_1") {
+                for (auto& sprite : sprites.sunbed_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
-			}
-			else if (name == "blue_umbrella_1") {
-                for(auto& sprite : sprites.blue_umbrella_1) {
+            }
+            else if (name == "blue_umbrella_1") {
+                for (auto& sprite : sprites.blue_umbrella_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
-			}
-			else if (name == "tree_1") {
-                for(auto& sprite : sprites.tree_1) {
+            }
+            else if (name == "tree_1") {
+                for (auto& sprite : sprites.tree_1) {
                     HitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
-			}
+            }
 
-    // apply the new dimensions
-    bounds.width = new_width;
-    bounds.height = new_height;
+            //// FIX: fix the vehicle collision boxes 
+            //// vehicles collision boxes
+   //         else if (name == "car_1_left") {
+   //             HitBox[&sprites.car_1_left] = AdjustHitBox(sprites.car_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "car_1_right") {
+   //             HitBox[&sprites.car_1_right] = AdjustHitBox(sprites.car_1_right, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "car_2_left") {
+   //             HitBox[&sprites.car_2_left] = AdjustHitBox(sprites.car_2_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "car_2_right") {
+   //             HitBox[&sprites.car_2_right] = AdjustHitBox(sprites.car_2_right, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "truck_1_left") {
+   //             HitBox[&sprites.truck_1_left] = AdjustHitBox(sprites.truck_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "truck_1_right") {
+   //             HitBox[&sprites.truck_1_right] = AdjustHitBox(sprites.truck_1_right, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "pickup_truck_1_left") {
+   //             HitBox[&sprites.pickup_truck_1_left] = AdjustHitBox(sprites.pickup_truck_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "pickup_truck_1_right") {
+   //             HitBox[&sprites.pickup_truck_1_right] = AdjustHitBox(sprites.pickup_truck_1_right, width, height, y_offset, x_offset);
+   //         } 
+   //         else if (name == "bus_1_left") {
+   //             HitBox[&sprites.bus_1_left] = AdjustHitBox(sprites.bus_1_left, width, height, y_offset, x_offset);
+   //         }
+   //         else if (name == "bus_1_right") {
+   //             HitBox[&sprites.bus_1_right] = AdjustHitBox(sprites.bus_1_right, width, height, y_offset, x_offset);
+            //}
 
-			// TODO: add copy of building and others sprites with different positions 
-        }   
-		// test output for visualization of loaded hitboxes
+            // TODO: add copy of building and others sprites with different positions 
+        }
+        // test output for visualization of loaded hitboxes
         std::cout << "  load hitboxes " << HitBox.size() << "\n";
     }
 
-	// test function for drawing hitboxes
+    // test function for drawing hitboxes
     void DrawHitBoxes(sf::RenderWindow& window) {
         for (auto it = HitBox.begin(); it != HitBox.end(); ++it) {
             sf::Sprite* sprite = it->first;
@@ -131,9 +157,11 @@ public:
             shape.setOutlineThickness(1.f);
             shape.setOutlineColor(sf::Color::Red);
 
-    // HitBox of the sprite = AdjustHitBox(width, height, offset)
+            window.draw(shape);
+        }
+    }
 
-	// collision logic for map borders
+    // collision logic for map borders
     bool CheckCollisionWithMapBorders(sf::Sprite& player, float map_width, float map_height) {
         sf::FloatRect player_bounds = player.getGlobalBounds();
         // Check if the player is outside the map boundaries
@@ -143,5 +171,5 @@ public:
             return true; // Collision with map borders
         }
         return false; // No collision
-	}
+    }
 };
