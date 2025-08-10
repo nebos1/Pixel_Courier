@@ -9,10 +9,8 @@
 
 #include <algorithm>
 
+#include "Collision.h"
 
-// function for movement
-inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height, Textures& textures, const std::vector<sf::Sprite*>& CollisionObjects) {
-    sf::Vector2f movement(0.0f, 0.0f);
 
 inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height,     
                                 Textures& textures, Collision& collision ) {
@@ -33,7 +31,7 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
         movement.y += speed; player.setTexture(textures.front_courier);
     }
 
-    // Move the player
+    // move the player
     player.move(movement);
 
 	// Check for collisions with map borders
@@ -42,25 +40,24 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
         player.move(-movement);
     }
 
-    // Left and top boundaries
-    if (pos.x < 0.f) pos.x = 0.f;
-    if (pos.y < 0.f) pos.y = 0.f;
 
     // TOFIX: PLAYER COLLISION WITH MAP 
 
-    // Apply corrected position
-    player.setPosition(pos);
+    // player collision with obj
+    for (auto it = collision.HitBox.begin(); it != collision.HitBox.end(); ++it) {
+        sf::Sprite* sprite = it->first;
+
+        if (sprite == &player) continue; //skip collision with itself
+
+    // Right and bottom boundaries (consider sprite size)
+    if (pos.x + bounds.width > map_width) pos.x = map_width - bounds.width;
+    if (pos.y + bounds.height > map_height) pos.y = map_height - bounds.height;
 
         if (PlayerHitBox != collision.HitBox.end()) {
             const sf::FloatRect global_bounds = player.getGlobalBounds();  // sprite position 
 			const sf::FloatRect hit_box = PlayerHitBox->second;  //relative hitbox for Init()
 
-			// object-hitbox with local bounds
-            PlayerRectWorld.left = global_bounds.left + hit_box.left;
-            PlayerRectWorld.top = global_bounds.top + hit_box.top;
-            PlayerRectWorld.width = hit_box.width;
-            PlayerRectWorld.height = hit_box.height;
-        }
+}
 
         for (auto it = collision.HitBox.begin(); it != collision.HitBox.end(); ++it) {
             sf::Sprite* sprite = it->first;

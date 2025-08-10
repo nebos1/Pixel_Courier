@@ -1,4 +1,5 @@
-// custom collision with every sprite loaded in game
+// apply collision border to the object using txt file
+// and apply collision logic to the object
 
 #pragma once
 #include <SFML/Graphics.hpp>
@@ -6,36 +7,44 @@
 #include "Sprites_load.h"
 
 #include <map>
+#include <fstream>
+#include <string>
 
 
-// add the definition of AdjustHitbox function 
+// add the definition of AdjustHitBox function 
 // 
-// WidthFactor and HeightFactor are the taking factor of the object to remove the collision 
-// offset is the moving offset of the colllision figure to be movable
+// WidthFactor and HeightFactor are the taking factor of the object to remove/apply the collision to the object in a proper more realistic way 
+// x_offset, y_offset are the coordinates of the object to adjust the hitbox position
 
-inline sf::FloatRect AdjustHitbox(const sf::Sprite& sprite, float WidthFactor, float HeightFactor, float offset) {
-    sf::FloatRect bounds = sprite.getGlobalBounds();
+inline sf::FloatRect AdjustHitBox(const sf::Sprite& sprite, float WidthFactor, float HeightFactor, float y_offset, float x_offset) {
+    sf::FloatRect global_bounds = sprite.getGlobalBounds();
 
-    // calculation of the new width and height
-    float new_width = bounds.width * WidthFactor;
-    float new_height = bounds.height * HeightFactor;
-
-    // shifting 
-    bounds.top += bounds.height * offset;
-
-    // centralizing
-    bounds.left += (bounds.width - new_width) / 2.0f;
-
-    void Init(Sprites& sprites) {
-        std::ifstream file("PixelCourier/hitbox_config.txt");
-
-    return bounds;
+    sf::FloatRect relative_bounds;
+    relative_bounds.width = global_bounds.width * WidthFactor;
+    relative_bounds.height = global_bounds.height * HeightFactor;
+	relative_bounds.left = global_bounds.width * x_offset; 
+	relative_bounds.top = global_bounds.height * y_offset;  
+    return relative_bounds;
 }
 
 
 class Collision {
 public:
-	std::map<sf::Sprite*, sf::FloatRect> HitBox;
+    std::map<sf::Sprite*, sf::FloatRect> HitBox;
+
+    void Init(Sprites& sprites) {
+        std::ifstream file("PixelCourier/hitbox_config.txt");
+
+
+        if (!file.is_open()) {
+            std::cout << "not found the txt!\n";
+            return;
+        }
+
+        HitBox.clear();
+
+        std::string name;
+		float width, height, y_offset, x_offset;
 
         while (file >> name >> width >> height >> y_offset >> x_offset) {
 			
@@ -89,38 +98,9 @@ public:
                 }
 			}
 
-			//// FIX: fix the vehicle collision boxes 
-			//// vehicles collision boxes
-   //         else if (name == "car_1_left") {
-   //             HitBox[&sprites.car_1_left] = AdjustHitBox(sprites.car_1_left, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "car_1_right") {
-   //             HitBox[&sprites.car_1_right] = AdjustHitBox(sprites.car_1_right, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "car_2_left") {
-   //             HitBox[&sprites.car_2_left] = AdjustHitBox(sprites.car_2_left, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "car_2_right") {
-   //             HitBox[&sprites.car_2_right] = AdjustHitBox(sprites.car_2_right, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "truck_1_left") {
-   //             HitBox[&sprites.truck_1_left] = AdjustHitBox(sprites.truck_1_left, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "truck_1_right") {
-   //             HitBox[&sprites.truck_1_right] = AdjustHitBox(sprites.truck_1_right, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "pickup_truck_1_left") {
-   //             HitBox[&sprites.pickup_truck_1_left] = AdjustHitBox(sprites.pickup_truck_1_left, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "pickup_truck_1_right") {
-   //             HitBox[&sprites.pickup_truck_1_right] = AdjustHitBox(sprites.pickup_truck_1_right, width, height, y_offset, x_offset);
-   //         } 
-   //         else if (name == "bus_1_left") {
-   //             HitBox[&sprites.bus_1_left] = AdjustHitBox(sprites.bus_1_left, width, height, y_offset, x_offset);
-   //         }
-   //         else if (name == "bus_1_right") {
-   //             HitBox[&sprites.bus_1_right] = AdjustHitBox(sprites.bus_1_right, width, height, y_offset, x_offset);
-			//}
+    // apply the new dimensions
+    bounds.width = new_width;
+    bounds.height = new_height;
 
 			// TODO: add copy of building and others sprites with different positions 
         }   
@@ -151,9 +131,7 @@ public:
             shape.setOutlineThickness(1.f);
             shape.setOutlineColor(sf::Color::Red);
 
-            window.draw(shape);
-        }
-    }
+    // HitBox of the sprite = AdjustHitBox(width, height, offset)
 
 	// collision logic for map borders
     bool CheckCollisionWithMapBorders(sf::Sprite& player, float map_width, float map_height) {
