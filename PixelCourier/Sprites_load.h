@@ -6,15 +6,18 @@
 
 #include "Textures_load.h"
 
-#include <vector> // for collision logic to objects
+#include <vector> // for collision logic to objects and amount of objects
+
+
 
 class Sprites {
 public:
-
-	// Player sprite
+	// player sprite
 	sf::Sprite player;
 
-	// Map 
+
+
+	// map 
 	sf::Sprite map;
 
 
@@ -32,16 +35,7 @@ public:
 	sf::Sprite left_moving_courier_1;
 	sf::Sprite right_moving_courier_1;
 
-	// Buildings 
-	sf::Sprite house_1;
-	sf::Sprite block_1;
-	sf::Sprite courier_house;
 
-	// Others
-	sf::Sprite bush_1;
-	sf::Sprite sunbed_1;
-	sf::Sprite blue_umbrella_1;
-	sf::Sprite tree_1;
 
 	// buildings 
 	std::vector<sf::Sprite> house_1;
@@ -86,16 +80,13 @@ public:
 
 
 inline void Sprites::CreateAllSprites(Textures& textures) {
-	// create player sprite
-	player.setTexture(textures.front_courier); 
+	// player sprite
+	player.setTexture(textures.front_courier);
 
-	// create map sprit
+
+	// map sprite (backgound)
 	map.setTexture(textures.map);
 
-	// create building sprites
-	house_1.setTexture(textures.house_1);
-	block_1.setTexture(textures.block_1);
-	courier_house.setTexture(textures.courier_house);
 
 	// courier sprites for directions
 	front_courier.setTexture(textures.front_courier);
@@ -199,4 +190,35 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	auto AddPointer = [&](std::vector<sf::Sprite>& v) {
 		for (auto& s : v) CollisionObjects.push_back(&s);
 	};
+
+
+	// add pointers to all objects for collision
+	// buildings
+	//
+	AddPointer(house_1);
+	AddPointer(block_1);
+	AddPointer(courier_house);
+	AddPointer(church_1);
+	//
+	// others
+	AddPointer(bush_1);
+	AddPointer(sunbed_1);
+	AddPointer(blue_umbrella_1);
+	AddPointer(tree_1);
+	//
+	// vehicles
+	AddPointer(car_1_left);
+	AddPointer(car_1_right);
+
+	AddPointer(car_2_left);
+	AddPointer(car_2_right);
+
+	AddPointer(truck_1_left);
+	AddPointer(truck_1_right);
+
+	AddPointer(pickup_truck_1_left);
+	AddPointer(pickup_truck_1_right);
+
+	AddPointer(bus_1_left);
+	AddPointer(bus_1_right);
 }
