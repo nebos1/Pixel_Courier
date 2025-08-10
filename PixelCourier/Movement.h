@@ -8,49 +8,81 @@
 
 #include <algorithm>
 
+#include "Collision.h"
 
-// function for movement
-inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height, Textures& textures, const std::vector<sf::Sprite*>& CollisionObjects) {
-    sf::Vector2f movement(0.0f, 0.0f);
 
+inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height,     
+                                Textures& textures, Collision& collision ) {
+
+    sf::Vector2f movement(0.0, 0.0);
+
+    // player movement based on key presses
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        movement.x -= speed;
-		player.setTexture(textures.left_courier); // Change texture to left view
+        movement.x -= speed; player.setTexture(textures.left_courier);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        movement.x += speed;
-		player.setTexture(textures.right_courier); // Change texture to right view
+        movement.x += speed; player.setTexture(textures.right_courier);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        movement.y -= speed;
-		player.setTexture(textures.back_courier); // Change texture to up view
+        movement.y -= speed; player.setTexture(textures.back_courier);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        movement.y += speed;
-		player.setTexture(textures.front_courier); // Change texture to down view
+        movement.y += speed; player.setTexture(textures.front_courier);
     }
 
-    // Move the player
+    // move the player
     player.move(movement);
 
-    // Clamp player's position so he cannot leave the map
-    sf::Vector2f pos = player.getPosition();
-    sf::FloatRect bounds = player.getGlobalBounds();
+	// Check for collisions with map borders
+    if (collision.CheckCollisionWithMapBorders(player, map_width, map_height)) {
+        // If there is a collision, move the player back
+        player.move(-movement);
+    }
 
-    // Left and top boundaries
-    if (pos.x < 0.f) pos.x = 0.f;
-    if (pos.y < 0.f) pos.y = 0.f;
 
-    // Right and bottom boundaries (consider sprite size)
-    if (pos.x + bounds.width > map_width) pos.x = map_width - bounds.width;
-    if (pos.y + bounds.height > map_height) pos.y = map_height - bounds.height;
+    // TOFIX: PLAYER COLLISION WITH MAP 
 
-    // Apply corrected position
-    player.setPosition(pos);
+    // player collision with obj
+    for (auto it = collision.HitBox.begin(); it != collision.HitBox.end(); ++it) {
+        sf::Sprite* sprite = it->first;
 
+        if (sprite == &player) continue; //skip collision with itself
+
+        sf::FloatRect PlayerRectWorld = player.getGlobalBounds();
+        auto PlayerHitBox = collision.HitBox.find(&player);
+
+        if (PlayerHitBox != collision.HitBox.end()) {
+            const sf::FloatRect global_bounds = player.getGlobalBounds();  // sprite position 
+			const sf::FloatRect hit_box = PlayerHitBox->second;  //relative hitbox for Init()
+
+			// object-hitbox with local bounds
+            PlayerRectWorld.left = global_bounds.left + hit_box.left;
+            PlayerRectWorld.top = global_bounds.top + hit_box.top;
+            PlayerRectWorld.width = hit_box.width;
+            PlayerRectWorld.height = hit_box.height;
+        }
+
+        for (auto it = collision.HitBox.begin(); it != collision.HitBox.end(); ++it) {
+            sf::Sprite* sprite = it->first;
+			if (sprite == &player) continue; // skip collision with itself
+
+            const sf::FloatRect hit_box = it->second;
+            const sf::FloatRect global_bounds = sprite->getGlobalBounds();
+
+            // object-hitbox with local bounds
+            sf::FloatRect ObjRectWorld;
+            ObjRectWorld.left = global_bounds.left + hit_box.left;
+            ObjRectWorld.top = global_bounds.top + hit_box.top;
+            ObjRectWorld.width = hit_box.width;
+            ObjRectWorld.height = hit_box.height;
+
+            if (PlayerRectWorld.intersects(ObjRectWorld)) {
+                player.move(-movement);
+                break;
+            }
+        }
+    }
 }
-
-
 
 
 // function for camera movement + vision  
