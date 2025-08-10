@@ -22,7 +22,7 @@ public:
 
 
 
-	// courier views
+	// courier views (idling)
 	sf::Sprite front_courier;
 	sf::Sprite back_courier;
 	sf::Sprite left_courier;
@@ -34,6 +34,7 @@ public:
 	sf::Sprite bottom_moving_courier_2;
 	sf::Sprite left_moving_courier_1;
 	sf::Sprite right_moving_courier_1;
+
 
 
 
@@ -88,12 +89,18 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	map.setTexture(textures.map);
 
 
-	// courier sprites for directions
+	// courier sprites views for directions (idling)
 	front_courier.setTexture(textures.front_courier);
 	back_courier.setTexture(textures.back_courier);
 	left_courier.setTexture(textures.left_courier);
 	right_courier.setTexture(textures.right_courier);
-
+	// courier sprites views for moving
+	top_moving_courier_1.setTexture(textures.top_moving_courier_1);
+	top_moving_courier_2.setTexture(textures.top_moving_courier_2);
+	bottom_moving_courier_1.setTexture(textures.bottom_moving_courier_1);
+	bottom_moving_courier_2.setTexture(textures.bottom_moving_courier_2);
+	left_moving_courier_1.setTexture(textures.left_moving_courier_1);
+	right_moving_courier_1.setTexture(textures.right_moving_courier_1);
 
 	// clear all vectors before filling them with new sprites
 	// this will load the sprites from Position_management.h
@@ -183,13 +190,13 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	tmp.setTexture(textures.bus_1_right);
 	bus_1_right.push_back(tmp);
 
-	
+
 	CollisionObjects.clear();
 	CollisionObjects.push_back(&player);
 
 	auto AddPointer = [&](std::vector<sf::Sprite>& v) {
 		for (auto& s : v) CollisionObjects.push_back(&s);
-	};
+		};
 
 
 	// add pointers to all objects for collision
