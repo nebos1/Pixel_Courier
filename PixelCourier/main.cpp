@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include <iostream>
 #include <algorithm>
@@ -25,9 +26,22 @@ int main() {
     Sprites sprites;
     sprites.CreateAllSprites(textures);
 
-    // set positions to all sprites (otherwise all is 0.0f)
-    SetInitialPositions(sprites);
 
+	// load all positions of objects
+	PositionManagement position_management;
+	position_management.PosInit(sprites, textures);
+
+
+	// collision objects
+	Collision collision;
+	collision.Init(sprites);
+
+
+    // map size (same as the background)
+    const float map_width = 1500.f;
+    const float map_height = 1800.f;
+
+    
     // camera setup
     sf::View camera(sf::FloatRect(0.f, 0.f, 1280.f, 708.f));
     camera.setCenter(sprites.player.getPosition());
@@ -47,8 +61,8 @@ int main() {
             }
         }
 
-        // player movement 
-        HandlePlayerMovement(sprites.player, 2.0f, map_width, map_height, textures, sprites.CollisionObjects);
+        // player movement
+        HandlePlayerMovement(sprites.player, 10.0f, map_width, map_height, textures, collision);
 
         // camera follows the player but stays inside map bounds
         HandleCameraView(sprites.player, camera, map_width, map_height);
@@ -66,6 +80,53 @@ int main() {
         window.draw(sprites.sunbed_1);
         window.draw(sprites.blue_umbrella_1);
         window.draw(sprites.player);
+
+
+        // draw the buildings + other objects
+        //
+        // buildings
+        for (auto& house : sprites.house_1) {
+            window.draw(house);
+        }
+        for (auto& block : sprites.block_1) {
+            window.draw(block);
+        }
+        for (auto& courier_house : sprites.courier_house) {
+            window.draw(courier_house);
+        }
+        for (auto& church : sprites.church_1) {
+            window.draw(church);
+        }
+        // other objects
+        for (auto& bush : sprites.bush_1) {
+            window.draw(bush);
+        }
+        for (auto& sunbed : sprites.sunbed_1) {
+            window.draw(sunbed);
+        }
+        for (auto& blue_umbrella : sprites.blue_umbrella_1) {
+            window.draw(blue_umbrella);
+        }
+        for (auto& tree : sprites.tree_1) {
+            window.draw(tree);
+        }
+
+
+
+        // test draw of the hitboxes for visualization
+        collision.DrawHitBoxes(window);
+        //
+        //
+        // test for reloading hitboxes and positions
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+            // reload positions
+            position_management.PosInit(sprites, textures);
+            // reload the hitboxes
+            collision.Init(sprites);
+            std::cout << "ObjectPositions.size() = " << position_management.ObjectPositions.size() << "\n";
+            std::cout << "HitBox.size() = " << collision.HitBox.size() << "\n";
+        }
+
 
         window.display();
     }
