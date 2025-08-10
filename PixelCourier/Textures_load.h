@@ -16,11 +16,18 @@ public:
 	// from map
 	sf::Texture map; // Map texture (used as background img)
 
-	// from courier
+	// from courier (apply idling textures based on position)
 	sf::Texture front_courier;
 	sf::Texture back_courier;
 	sf::Texture left_courier;
 	sf::Texture right_courier;
+	// apply moving sprites of the courier based on position
+	sf::Texture top_moving_courier_1; 
+	sf::Texture top_moving_courier_2;
+	sf::Texture bottom_moving_courier_1;
+	sf::Texture bottom_moving_courier_2;
+	sf::Texture left_moving_courier_1;
+	sf::Texture right_moving_courier_1;
 
 	// from buildings
 	sf::Texture house_1;
@@ -46,11 +53,11 @@ inline bool Textures::LoadAllTextures() {
 		// from map
 		map.loadFromFile("assets/map/map.png") &&
 
-		// from courier
-		front_courier.loadFromFile("assets/courier/front_view_courier.png") &&
-		back_courier.loadFromFile("assets/courier/back_view_courier.png") &&
-		left_courier.loadFromFile("assets/courier/left_view_courier.png") &&
-		right_courier.loadFromFile("assets/courier/right_view_courier.png") &&
+    // from courier
+    success &= front_courier.loadFromFile("assets/courier/front_view_courier.png");
+    success &= back_courier.loadFromFile("assets/courier/back_view_courier.png");
+    success &= left_courier.loadFromFile("assets/courier/left_view_courier.png");
+    success &= right_courier.loadFromFile("assets/courier/right_view_courier.png");
 
 		// from buildings
 		house_1.loadFromFile("assets/buildings/house_1.png") &&
