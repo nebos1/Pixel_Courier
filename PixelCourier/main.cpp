@@ -35,21 +35,22 @@ int main() {
     sprites.CreateAllSprites(textures);
 
 
-	// load all positions of objects
-	PositionManagement position_management;
-	position_management.PosInit(sprites, textures);
+    // load all positions of objects
+    PositionManagement position_management;
+    position_management.PosInit(sprites, textures);
 
+	sf::Clock clock; // for delta time calculation
 
-	// collision objects
-	Collision collision;
-	collision.Init(sprites);
+    // collision objects
+    Collision collision;
+    collision.AddHitBox(sprites);
 
 
     // map size (same as the background)
     const float map_width = 1500.f;
     const float map_height = 1800.f;
 
-    
+
     // camera setup
     sf::View camera(sf::FloatRect(0.f, 0.f, 1280.f, 708.f));
     camera.setCenter(sprites.player.getPosition());
@@ -65,8 +66,9 @@ int main() {
             }
         }
 
+        float delta_time = clock.restart().asSeconds();
         // player movement
-        HandlePlayerMovement(sprites.player, 10.0f, map_width, map_height, textures, collision);
+        HandlePlayerMovement(sprites.player, 200.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time);
 
         // camera follows the player but stays inside map bounds
         HandleCameraView(sprites.player, camera, map_width, map_height);
@@ -76,7 +78,7 @@ int main() {
 
         // Draw objects
         //
-        // draw the map as background
+        // draw the map as background   
         window.draw(sprites.map);
         //
         // draw the player
@@ -123,7 +125,7 @@ int main() {
             // reload positions
             position_management.PosInit(sprites, textures);
             // reload the hitboxes
-            collision.Init(sprites);
+            collision.AddHitBox(sprites);
             std::cout << "ObjectPositions.size() = " << position_management.ObjectPositions.size() << "\n";
             std::cout << "HitBox.size() = " << collision.HitBox.size() << "\n";
         }
@@ -132,4 +134,4 @@ int main() {
         window.display();
     }
     return 0;
-} 
+}
