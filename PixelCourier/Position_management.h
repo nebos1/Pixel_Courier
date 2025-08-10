@@ -110,7 +110,7 @@ public:
 			for (auto& obj : object_vector) {
 				sprites.CollisionObjects.push_back(&obj);
 			}
-		};
+			};
 
 
 		std::cout << "loading positions..." << ObjectPositions.size() << "\n";
