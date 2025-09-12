@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <random>
+#include <ctime>
 
 #include "Textures_load.h"
 #include "Sprites_load.h"
@@ -10,7 +13,6 @@
 #include "Movement.h"
 #include "Collision.h"
 #include "Moving_vehicles.h"
-
 
 int main() {
 
@@ -56,6 +58,11 @@ int main() {
     camera.setCenter(sprites.player.getPosition());
     camera.zoom(0.9f);// later to adjust again
 
+    // vehicle movement setup
+    Movement movement;
+    movement.PosInit(sprites, textures);
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
 
     while (window.isOpen()) {
         sf::Event event; // basic event creation
@@ -70,16 +77,26 @@ int main() {
         // player movement
         HandlePlayerMovement(sprites.player, 200.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time);
 
+        // vehicle movement update
+		movement.Update(delta_time, sprites, textures);
+        
         // camera follows the player but stays inside map bounds
         HandleCameraView(sprites.player, camera, map_width, map_height);
         window.setView(camera);
 
+
+
         window.clear();
 
-        // Draw objects
+        // draw objects
         //
         // draw the map as background   
         window.draw(sprites.map);
+
+		// collect everything to sort by y_offset of player feet 
+        // 
+        struct DrawItem { sf::Sprite* sprite; float y_offset; };
+        std::vector<DrawItem> drawList;
         //
         // draw the player
         window.draw(sprites.player);
@@ -113,9 +130,42 @@ int main() {
         for (auto& tree : sprites.tree_1) {
             window.draw(tree);
         }
+		// vehicles
+        for (auto& car_1_left : sprites.car_1_left) {
+			window.draw(car_1_left);
+        }
+        for (auto& car_1_right : sprites.car_1_right) {
+            window.draw(car_1_right);
+        }
+        for (auto& car_2_left : sprites.car_2_left) {
+            window.draw(car_2_left);
+		}
+        for (auto& car_2_right : sprites.car_2_right) {
+            window.draw(car_2_right);
+		}
+        for (auto& truck_1_left : sprites.truck_1_left) {
+            window.draw(truck_1_left);
+        }
+        for (auto& truck_1_right : sprites.truck_1_right) {
+            window.draw(truck_1_right);
+		}
+        for (auto& pickup_truck_1_left : sprites.pickup_truck_1_left) {
+            window.draw(pickup_truck_1_left);
+		}
+        for (auto& pickup_truck_1_right : sprites.pickup_truck_1_right) {
+            window.draw(pickup_truck_1_right);
+        }
+        for (auto& bus_1_left : sprites.bus_1_left) {
+            window.draw(bus_1_left);
+		}
+        for (auto& bus_1_right : sprites.bus_1_right) {
+            window.draw(bus_1_right);
+        }
 
 
 
+        //TO BE REMOVED ON FINAL RELEASE
+        //
         // test draw of the hitboxes for visualization
         collision.DrawHitBoxes(window);
         //
@@ -124,12 +174,14 @@ int main() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
             // reload positions
             position_management.PosInit(sprites, textures);
+            movement.PosInit(sprites, textures);
+
             // reload the hitboxes
             collision.AddHitBox(sprites);
             std::cout << "ObjectPositions.size() = " << position_management.ObjectPositions.size() << "\n";
             std::cout << "HitBox.size() = " << collision.HitBox.size() << "\n";
         }
-
+        //
 
         window.display();
     }
