@@ -38,7 +38,10 @@
     <ClInclude Include="Moving_vehicles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Layers.h">
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TODO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
