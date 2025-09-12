@@ -54,6 +54,7 @@ public:
 	sf::Texture bus_1_right;
 
 	bool LoadAllTextures();
+
 };
 
 // load all textures from files

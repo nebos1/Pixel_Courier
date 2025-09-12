@@ -100,9 +100,6 @@ public:
 			}
 		}
 
-
-		// TO FIX!!!!!!!!!!!!!!!!!!
-		// CollisionObjects with pointers
 		sprites.CollisionObjects.clear();
 		sprites.CollisionObjects.push_back(&sprites.player);
 
@@ -110,7 +107,7 @@ public:
 			for (auto& obj : object_vector) {
 				sprites.CollisionObjects.push_back(&obj);
 			}
-			};
+		};
 
 
 		std::cout << "loading positions..." << ObjectPositions.size() << "\n";
