@@ -7,7 +7,7 @@
 #include "Textures_load.h"
 
 #include <vector> // for collision logic to objects and amount of objects
-
+#include <deque> // for vehicles and moving them
 
 
 class Sprites {
@@ -55,20 +55,20 @@ public:
 
 
 	// vehicles 
-	std::vector<sf::Sprite> car_1_left;
-	std::vector<sf::Sprite> car_1_right;
+	std::deque<sf::Sprite> car_1_left;
+	std::deque<sf::Sprite> car_1_right;
 
-	std::vector<sf::Sprite> car_2_left;
-	std::vector<sf::Sprite> car_2_right;
+	std::deque<sf::Sprite> car_2_left;
+	std::deque<sf::Sprite> car_2_right;
 
-	std::vector<sf::Sprite> truck_1_left;
-	std::vector<sf::Sprite> truck_1_right;
+	std::deque<sf::Sprite> truck_1_left;
+	std::deque<sf::Sprite> truck_1_right;
 
-	std::vector<sf::Sprite> pickup_truck_1_left;
-	std::vector<sf::Sprite> pickup_truck_1_right;
+	std::deque<sf::Sprite> pickup_truck_1_left;
+	std::deque<sf::Sprite> pickup_truck_1_right;
 
-	std::vector<sf::Sprite> bus_1_left;
-	std::vector<sf::Sprite> bus_1_right;
+	std::deque<sf::Sprite> bus_1_left;
+	std::deque<sf::Sprite> bus_1_right;
 
 
 
@@ -133,66 +133,43 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	bus_1_left.clear();
 	bus_1_right.clear();
 
-	// tmp is a temporary variable for applying textures to all objects
-	sf::Sprite tmp;
 
-	tmp.setTexture(textures.house_1);
-	house_1.push_back(tmp);
+	// apply the texture to the exact sprite
+	//
+	// buildings
+	house_1.push_back(sf::Sprite(textures.house_1));
+	block_1.push_back(sf::Sprite(textures.block_1));
+	courier_house.push_back(sf::Sprite(textures.courier_house));
+	church_1.push_back(sf::Sprite(textures.church_1));
 
-	tmp.setTexture(textures.block_1);
-	block_1.push_back(tmp);
+	// others
+	bush_1.push_back(sf::Sprite(textures.bush_1));
+	sunbed_1.push_back(sf::Sprite(textures.sunbed_1));
+	blue_umbrella_1.push_back(sf::Sprite(textures.blue_umbrella_1));
+	tree_1.push_back(sf::Sprite(textures.tree_1));
 
-	tmp.setTexture(textures.courier_house);
-	courier_house.push_back(tmp);
+	// vehicles
+	car_1_left.push_back(sf::Sprite(textures.car_1_left));
+	car_1_right.push_back(sf::Sprite(textures.car_1_right));
 
-	tmp.setTexture(textures.church_1);
-	church_1.push_back(tmp);
+	car_2_left.push_back(sf::Sprite(textures.car_2_left));
+	car_2_right.push_back(sf::Sprite(textures.car_2_right));
 
-	tmp.setTexture(textures.bush_1);
-	bush_1.push_back(tmp);
+	truck_1_left.push_back(sf::Sprite(textures.truck_1_left));
+	truck_1_right.push_back(sf::Sprite(textures.truck_1_right));
 
-	tmp.setTexture(textures.sunbed_1);
-	sunbed_1.push_back(tmp);
+	pickup_truck_1_left.push_back(sf::Sprite(textures.pickup_truck_1_left));
+	pickup_truck_1_right.push_back(sf::Sprite(textures.pickup_truck_1_right));
 
-	tmp.setTexture(textures.blue_umbrella_1);
-	blue_umbrella_1.push_back(tmp);
-
-	tmp.setTexture(textures.tree_1);
-	tree_1.push_back(tmp);
-
-	tmp.setTexture(textures.car_1_left);
-	car_1_left.push_back(tmp);
-
-	tmp.setTexture(textures.car_1_right);
-	car_1_right.push_back(tmp);
-
-	tmp.setTexture(textures.car_2_left);
-	car_2_left.push_back(tmp);
-
-	tmp.setTexture(textures.car_2_right);
-	car_2_right.push_back(tmp);
-
-	tmp.setTexture(textures.truck_1_left);
-	truck_1_left.push_back(tmp);
-
-	tmp.setTexture(textures.truck_1_right);
-	truck_1_right.push_back(tmp);
-
-	tmp.setTexture(textures.pickup_truck_1_left);
-	pickup_truck_1_left.push_back(tmp);
-
-	tmp.setTexture(textures.pickup_truck_1_right);
-	pickup_truck_1_right.push_back(tmp);
-
-	tmp.setTexture(textures.bus_1_left);
-	bus_1_left.push_back(tmp);
-
-	tmp.setTexture(textures.bus_1_right);
-	bus_1_right.push_back(tmp);
+	bus_1_left.push_back(sf::Sprite(textures.bus_1_left));
+	bus_1_right.push_back(sf::Sprite(textures.bus_1_right));
 
 
+	// Collision objects
 	CollisionObjects.clear();
 	CollisionObjects.push_back(&player);
+
+	
 
 	auto AddPointer = [&](std::vector<sf::Sprite>& v) {
 		for (auto& s : v) CollisionObjects.push_back(&s);
@@ -213,19 +190,5 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	AddPointer(blue_umbrella_1);
 	AddPointer(tree_1);
 	//
-	// vehicles
-	AddPointer(car_1_left);
-	AddPointer(car_1_right);
 
-	AddPointer(car_2_left);
-	AddPointer(car_2_right);
-
-	AddPointer(truck_1_left);
-	AddPointer(truck_1_right);
-
-	AddPointer(pickup_truck_1_left);
-	AddPointer(pickup_truck_1_right);
-
-	AddPointer(bus_1_left);
-	AddPointer(bus_1_right);
 }
