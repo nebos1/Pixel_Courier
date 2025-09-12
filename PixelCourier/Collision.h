@@ -32,6 +32,10 @@ class Collision {
 public:
     std::map<sf::Sprite*, sf::FloatRect> HitBox;
 
+    // here is added a vector storing all objects player can collide with
+    // this is used in Visibility.h to check if player is in front of the object
+    std::vector<sf::Sprite*> collidable_objects;
+
     void AddHitBox(Sprites& sprites) {
         std::ifstream file("PixelCourier/hitbox_config.txt");
 
@@ -42,6 +46,9 @@ public:
         }
 
         HitBox.clear();
+
+		collidable_objects.clear();
+
 
         std::string name;
         float width, height, y_offset, x_offset;
