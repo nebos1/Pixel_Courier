@@ -99,13 +99,48 @@ public:
 		sprites.CollisionObjects.clear();
 		sprites.CollisionObjects.push_back(&sprites.player);
 
-		auto AddPointerToCollision = [&](auto& object_vector) {
-			for (auto& obj : object_vector) {
-				sprites.CollisionObjects.push_back(&obj);
-			}
-		};
+		std::vector<sf::Sprite>::iterator it;
 
+		// buildings
+		it = sprites.house_1.begin();
+		while (it != sprites.house_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
 
-		std::cout << "loading positions..." << ObjectPositions.size() << "\n";
-	};
+		it = sprites.block_1.begin();
+		while (it != sprites.block_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		it = sprites.courier_house.begin();
+		while (it != sprites.courier_house.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		it = sprites.church_1.begin();
+		while (it != sprites.church_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		// others
+		it = sprites.bush_1.begin();
+		while (it != sprites.bush_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		it = sprites.sunbed_1.begin();
+		while (it != sprites.sunbed_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		it = sprites.blue_umbrella_1.begin();
+		while (it != sprites.blue_umbrella_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		it = sprites.tree_1.begin();
+		while (it != sprites.tree_1.end()) { 
+			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+	}
 };
