@@ -10,7 +10,7 @@
 #include "Textures_load.h"
 #include "Sprites_load.h"
 #include "Position_management.h"
-#include "Player_Movement.h"
+#include "Player_movement.h"
 #include "Collision.h"
 #include "Moving_vehicles.h"
 
@@ -92,11 +92,6 @@ int main() {
         //
         // draw the map as background   
         window.draw(sprites.map);
-
-		// collect everything to sort by y_offset of player feet 
-        // 
-        struct DrawItem { sf::Sprite* sprite; float y_offset; };
-        std::vector<DrawItem> drawList;
         //
         // draw the player
         window.draw(sprites.player);
