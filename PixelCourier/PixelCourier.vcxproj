@@ -136,7 +136,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="TODO.h" />
     <ClInclude Include="Moving_vehicles.h" />
-    <ClInclude Include="Movement.h" />
+    <ClInclude Include="Player_movement.h" />
     <ClInclude Include="Position_management.h" />
     <ClInclude Include="Textures_load.h" />
     <ClInclude Include="Timer.h" />
