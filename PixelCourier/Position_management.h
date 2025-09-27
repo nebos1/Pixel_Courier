@@ -11,7 +11,7 @@
 #include <fstream>
 #include <map>
 #include <string>
-#include <iostream>
+
 
 // TODO: add few more same objects, few more diff + moving cars with collision logic gameover
 
@@ -23,10 +23,6 @@ public:
 	void PosInit(Sprites& sprites, Textures& textures) {
 		std::ifstream file("PixelCourier/position_config.txt");
 
-		if (!file.is_open()) {
-			std::cerr << "not found the txt!\n";
-			return;
-		}
 
 		ObjectPositions.clear();
 
