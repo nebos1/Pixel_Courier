@@ -1,15 +1,7 @@
 
-//
-//
-// 
-// 
-// MAIN TODO NOW: add collision logic  to vehicles
-//
-//
-//
 
 //
-// LATER TODO: GAMEOVER WITH COLLISION WITH VEHICLE
+// MAIN TODO: GAMEOVER WITH COLLISION WITH VEHICLE AND GAMEOVER SCREEN
 //
 
 
