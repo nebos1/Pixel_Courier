@@ -10,7 +10,7 @@
 #include "Textures_load.h"
 #include "Sprites_load.h"
 #include "Position_management.h"
-#include "Movement.h"
+#include "Player_Movement.h"
 #include "Collision.h"
 #include "Moving_vehicles.h"
 
@@ -75,7 +75,7 @@ int main() {
 
         float delta_time = clock.restart().asSeconds();
         // player movement
-        HandlePlayerMovement(sprites.player, 200.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time);
+        HandlePlayerMovement(sprites.player, 180.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time);
 
         // vehicle movement update
 		movement.Update(delta_time, sprites, textures);
@@ -102,8 +102,40 @@ int main() {
         window.draw(sprites.player);
 
 
-        // draw the buildings + other objects
+        // draw all objects in game
+        // 
         //
+        // vehicles
+        for (auto& car_1_left : sprites.car_1_left) {
+            window.draw(car_1_left);
+        }
+        for (auto& car_1_right : sprites.car_1_right) {
+            window.draw(car_1_right);
+        }
+        for (auto& car_2_left : sprites.car_2_left) {
+            window.draw(car_2_left);
+        }
+        for (auto& car_2_right : sprites.car_2_right) {
+            window.draw(car_2_right);
+        }
+        for (auto& truck_1_left : sprites.truck_1_left) {
+            window.draw(truck_1_left);
+        }
+        for (auto& truck_1_right : sprites.truck_1_right) {
+            window.draw(truck_1_right);
+        }
+        for (auto& pickup_truck_1_left : sprites.pickup_truck_1_left) {
+            window.draw(pickup_truck_1_left);
+        }
+        for (auto& pickup_truck_1_right : sprites.pickup_truck_1_right) {
+            window.draw(pickup_truck_1_right);
+        }
+        for (auto& bus_1_left : sprites.bus_1_left) {
+            window.draw(bus_1_left);
+        }
+        for (auto& bus_1_right : sprites.bus_1_right) {
+            window.draw(bus_1_right);
+        }
         // buildings
         for (auto& house : sprites.house_1) {
             window.draw(house);
@@ -130,56 +162,30 @@ int main() {
         for (auto& tree : sprites.tree_1) {
             window.draw(tree);
         }
-		// vehicles
-        for (auto& car_1_left : sprites.car_1_left) {
-			window.draw(car_1_left);
-        }
-        for (auto& car_1_right : sprites.car_1_right) {
-            window.draw(car_1_right);
-        }
-        for (auto& car_2_left : sprites.car_2_left) {
-            window.draw(car_2_left);
-		}
-        for (auto& car_2_right : sprites.car_2_right) {
-            window.draw(car_2_right);
-		}
-        for (auto& truck_1_left : sprites.truck_1_left) {
-            window.draw(truck_1_left);
-        }
-        for (auto& truck_1_right : sprites.truck_1_right) {
-            window.draw(truck_1_right);
-		}
-        for (auto& pickup_truck_1_left : sprites.pickup_truck_1_left) {
-            window.draw(pickup_truck_1_left);
-		}
-        for (auto& pickup_truck_1_right : sprites.pickup_truck_1_right) {
-            window.draw(pickup_truck_1_right);
-        }
-        for (auto& bus_1_left : sprites.bus_1_left) {
-            window.draw(bus_1_left);
-		}
-        for (auto& bus_1_right : sprites.bus_1_right) {
-            window.draw(bus_1_right);
-        }
-
-
-
-        //TO BE REMOVED ON FINAL RELEASE
-        //
+		
+        // LATER REMOVE THIS
+        // 
         // test draw of the hitboxes for visualization
         collision.DrawHitBoxes(window);
+        Collision::DrawVehicleHitBox(window, sprites.car_1_left, "car_1_left", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.car_1_right, "car_1_right", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.car_2_left, "car_2_left", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.car_2_right, "car_2_right", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.truck_1_left, "truck_1_left", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.truck_1_right, "truck_1_right", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.pickup_truck_1_left, "pickup_truck_1_left", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.pickup_truck_1_right, "pickup_truck_1_right", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.bus_1_left, "bus_1_left", collision.VehicleConfig);
+        Collision::DrawVehicleHitBox(window, sprites.bus_1_right, "bus_1_right", collision.VehicleConfig);
         //
-        //
+        // 
         // test for reloading hitboxes and positions
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
             // reload positions
             position_management.PosInit(sprites, textures);
             movement.PosInit(sprites, textures);
-
             // reload the hitboxes
             collision.AddHitBox(sprites);
-            std::cout << "ObjectPositions.size() = " << position_management.ObjectPositions.size() << "\n";
-            std::cout << "HitBox.size() = " << collision.HitBox.size() << "\n";
         }
         //
 
