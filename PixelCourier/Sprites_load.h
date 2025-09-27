@@ -168,27 +168,4 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	// Collision objects
 	CollisionObjects.clear();
 	CollisionObjects.push_back(&player);
-
-	
-
-	auto AddPointer = [&](std::vector<sf::Sprite>& v) {
-		for (auto& s : v) CollisionObjects.push_back(&s);
-		};
-
-
-	// add pointers to all objects for collision
-	// buildings
-	//
-	AddPointer(house_1);
-	AddPointer(block_1);
-	AddPointer(courier_house);
-	AddPointer(church_1);
-	//
-	// others
-	AddPointer(bush_1);
-	AddPointer(sunbed_1);
-	AddPointer(blue_umbrella_1);
-	AddPointer(tree_1);
-	//
-
 }
