@@ -104,8 +104,5 @@ public:
 				sprites.CollisionObjects.push_back(&obj);
 			}
 		};
-
-
-		std::cout << "loading positions..." << ObjectPositions.size() << "\n";
 	};
 };
