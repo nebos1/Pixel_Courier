@@ -7,7 +7,7 @@
 #include "Textures_load.h"
 
 #include <vector> // for collision logic to objects and amount of objects
-#include <deque> // for vehicles and moving them
+#include <list>
 
 
 class Sprites {
@@ -55,20 +55,20 @@ public:
 
 
 	// vehicles 
-	std::deque<sf::Sprite> car_1_left;
-	std::deque<sf::Sprite> car_1_right;
+	std::list<sf::Sprite> car_1_left;
+	std::list<sf::Sprite> car_1_right;
 
-	std::deque<sf::Sprite> car_2_left;
-	std::deque<sf::Sprite> car_2_right;
+	std::list<sf::Sprite> car_2_left;
+	std::list<sf::Sprite> car_2_right;
 
-	std::deque<sf::Sprite> truck_1_left;
-	std::deque<sf::Sprite> truck_1_right;
+	std::list<sf::Sprite> truck_1_left;
+	std::list<sf::Sprite> truck_1_right;
 
-	std::deque<sf::Sprite> pickup_truck_1_left;
-	std::deque<sf::Sprite> pickup_truck_1_right;
+	std::list<sf::Sprite> pickup_truck_1_left;
+	std::list<sf::Sprite> pickup_truck_1_right;
 
-	std::deque<sf::Sprite> bus_1_left;
-	std::deque<sf::Sprite> bus_1_right;
+	std::list<sf::Sprite> bus_1_left;
+	std::list<sf::Sprite> bus_1_right;
 
 
 
