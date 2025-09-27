@@ -146,8 +146,6 @@ public:
             }
 
         }
-        // test output for visualization of loaded hitboxes
-        std::cout << "  load hitboxes " << StaticHitBox.size() << "\n";
     }
 
     // test function for drawing hitboxes
