@@ -6,6 +6,7 @@
 
 #include "Sprites_load.h"
 #include "Moving_vehicles.h"
+#include "Player_Movement.h"
 
 #include <map>
 #include <fstream>
@@ -177,13 +178,47 @@ public:
     // collision logic for map borders
     bool CheckCollisionWithMapBorders(sf::Sprite& player, float map_width, float map_height) {
         sf::FloatRect player_bounds = player.getGlobalBounds();
-        // Check if the player is outside the map boundaries
+        // check if the player is outside the map boundaries
         if (player_bounds.left < 0.0f || player_bounds.top < 0.0f ||
             player_bounds.left + player_bounds.width > map_width ||
             player_bounds.top + player_bounds.height > map_height) {
-            return true; // Collision with map borders
+            return true; // collision with map borders
         }
-        return false; // No collision
+        return false; // no collision
+    }
+
+	// taking the updated hitbox position
+    inline sf::FloatRect UpdatedBox(const sf::Sprite& sprite, const sf::FloatRect& relative) {
+        const sf::FloatRect global = sprite.getGlobalBounds();
+        return { global.left + relative.left, global.top + relative.top, relative.width, relative.height };
+    }
+
+	// getting the player hitbox
+    inline sf::FloatRect GetPlayerBox(Sprites& sprites, Collision& collision) {
+        auto it = collision.StaticHitBox.find(&sprites.player);
+        if (it == collision.StaticHitBox.end()) {
+			return sprites.player.getGlobalBounds(); // if not found, return full bounds
+        }
+		// getting the relative hitbox and global bounds to calculate the actual position of the hitbox
+        const sf::FloatRect relative = it->second;
+        const sf::FloatRect global = sprites.player.getGlobalBounds(); 
+        return { 
+            global.left + relative.left, global.top + relative.top, relative.width, relative.height 
+        };
+    }
+
+	// checking for collision for player with any vehicle
+    inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName,
+                                     const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
+        auto it = vhbc.find(TypeName);
+        if (it == vhbc.end()) return false;
+        for (const auto& v : vehicles) {
+            sf::FloatRect rel = AdjustHitBox(v, it->second.width_factor, it->second.height_factor, it->second.y_offset, it->second.x_offset);
+            sf::FloatRect g = v.getGlobalBounds();
+            sf::FloatRect box(g.left + rel.left, g.top + rel.top, rel.width, rel.height);
+            if (PlayerBox.intersects(box)) return true;
+        }
+        return false;
     }
 };
 
