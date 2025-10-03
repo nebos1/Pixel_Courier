@@ -13,6 +13,7 @@
 #include "Player_movement.h"
 #include "Collision.h"
 #include "Moving_vehicles.h"
+#include "GameOver.h"
 
 int main() {
 
@@ -157,11 +158,42 @@ int main() {
         for (auto& tree : sprites.tree_1) {
             window.draw(tree);
         }
-		
-        // LATER REMOVE THIS
-        // 
-        // test draw of the hitboxes for visualization
+
+		sf::FloatRect player_box = collision.GetPlayerBox(sprites, collision);
+
+		// player intersection with non-static objects
+        bool hit =
+            collision.PlayerHitsAnyVehicle(sprites.car_1_left, "car_1_left", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.car_1_right, "car_1_right", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.car_2_left, "car_2_left", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.car_2_right, "car_2_right", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.truck_1_left, "truck_1_left", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.truck_1_right, "truck_1_right", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.pickup_truck_1_left, "pickup_truck_1_left", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.pickup_truck_1_right, "pickup_truck_1_right", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.bus_1_left, "bus_1_left", collision.VehicleConfig, player_box) ||
+			collision.PlayerHitsAnyVehicle(sprites.bus_1_right, "bus_1_right", collision.VehicleConfig, player_box);
+
+		bool game_over = false; // flag to check if game is over
+
+        // get the game screen size and apply black screen on gameover logic
+        sf::RectangleShape black_screen(sf::Vector2f(float(window.getSize().x), float(window.getSize().y)));
+        black_screen.setFillColor(sf::Color::Black);
+            
+
+        // game over logic on hit with vehicle
+        if (hit) {
+
+            // temporary     
+            sprites.player.setPosition(400.f, 300.f);
+
+            game_over = true;
+            // apply game over black screen with gameover tex and current score done
+        }
+        // draw the hitboxes
         collision.DrawHitBoxes(window);
+        //
+		// LATER REMOVE THIS - just for testing vehicle hitboxes (visualization)
         Collision::DrawVehicleHitBox(window, sprites.car_1_left, "car_1_left", collision.VehicleConfig);
         Collision::DrawVehicleHitBox(window, sprites.car_1_right, "car_1_right", collision.VehicleConfig);
         Collision::DrawVehicleHitBox(window, sprites.car_2_left, "car_2_left", collision.VehicleConfig);
@@ -174,7 +206,7 @@ int main() {
         Collision::DrawVehicleHitBox(window, sprites.bus_1_right, "bus_1_right", collision.VehicleConfig);
         //
         // 
-        // test for reloading hitboxes and positions
+        // test for reloading hitboxes  (TO BE REMOVED!!!)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
             // reload positions
             position_management.PosInit(sprites, textures);
@@ -182,8 +214,7 @@ int main() {
             // reload the hitboxes
             collision.AddHitBox(sprites);
         }
-        //
-
+		// to vizualize everything                                                       
         window.display();
     }
     return 0;
