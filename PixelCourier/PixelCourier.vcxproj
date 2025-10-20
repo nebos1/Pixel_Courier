@@ -103,6 +103,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\nikol\OneDrive\Работен плот\few projects\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,7 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
-    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="Game_over.h" />
+    <ClInclude Include="Package_delivery.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="TODO.h" />
     <ClInclude Include="Moving_vehicles.h" />
     <ClInclude Include="Player_movement.h" />

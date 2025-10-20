@@ -44,7 +44,13 @@
     <ClInclude Include="TODO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameOver.h">
+    <ClInclude Include="Game_over.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Package_delivery.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
