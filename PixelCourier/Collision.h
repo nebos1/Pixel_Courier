@@ -145,11 +145,10 @@ public:
                 VehicleHitBoxConfigOBJ.x_offset = x_offset;
                 VehicleConfig[name] = VehicleHitBoxConfigOBJ;
             }
-
         }
     }
 
-    // test function for drawing hitboxes
+    
     void DrawHitBoxes(sf::RenderWindow& window) {
         for (auto it = StaticHitBox.begin(); it != StaticHitBox.end(); ++it) {
             sf::Sprite* sprite = it->first;
@@ -162,17 +161,6 @@ public:
             updated.top = global_bounds.top + rect.top;
             updated.width = rect.width;
             updated.height = rect.height;
-
-
-            // drawing a test rect
-            sf::RectangleShape shape;
-            shape.setPosition(updated.left, updated.top);
-            shape.setSize(sf::Vector2f(updated.width, updated.height));
-            shape.setFillColor(sf::Color(255, 0, 0, 80)); // red rect // LATER FIX THIS for transparent background
-            shape.setOutlineThickness(1.f);
-            shape.setOutlineColor(sf::Color::Red);
-
-            window.draw(shape);
         }
     }
     // collision logic for map borders
