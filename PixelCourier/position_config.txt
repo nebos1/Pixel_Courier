@@ -1,4 +1,4 @@
-player 1400 1550
+player 100 1750
 
 house_1 290 535
 house_1 350 535
