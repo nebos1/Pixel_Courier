@@ -14,16 +14,15 @@
 #include "Collision.h"
 #include "Moving_vehicles.h"
 #include "Game_over.h"
+#include "Clock.h"
+#include "Timer.h"
+#include "Score.h"
+
+#include "Npc-s_spawn.h"
+#include "Package_collect.h"
+#include "Package_delivery.h"
 
 int main() {
-
-    // FIX: those 2 to be applied at final version
-    // 
-    //sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    //sf::RenderWindow window(desktop, "Pixel Courier", sf::Style::Default);
-
-    // now using for tests
-
 
     // RENDERING WINDOW FOR VISUALIZATION
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Pixel Courier");
@@ -34,10 +33,8 @@ int main() {
     sf::Clock clock;
     //
 
-
-    //          LOADING RESOURCES
+    // LOADING RESOURCES
     //
-    // 
     // LOAD ALL TEXTURES
     Textures textures;
     if (!textures.LoadAllTextures()) return -1;
@@ -53,15 +50,15 @@ int main() {
     position_management.PosInit(sprites, textures);
     //
     //
-    //          END OF LOADING RESOURCES
-
-
+    // END OF LOADING RESOURCES
 
 
     // GAME OVER LOGIC
     bool game_over = false; // flag to check if game is over
-    int score = 0; // player score // TOFIX: to be updated in real time
-	sf::RectangleShape black_screen(sf::Vector2f(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)));
+    int score = 0;          // player score
+    bool package_collected = false; // courier can carry ONLY 1 package at a time
+
+    sf::RectangleShape black_screen(sf::Vector2f(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)));
     black_screen.setFillColor(sf::Color::Black);
     //
 
@@ -87,14 +84,27 @@ int main() {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
     //
 
+    // CLOCK WITH REMAINING TIME DISPLAY
+    ClockDisplay_OBJ.Resize(window.getSize());
+    ClockDisplay_OBJ.StartCountdown(); // start with 300 sec
+    //
 
+    // SCORE DISPLAY (TOP-RIGHT)
+    ScoreDisplay_OBJ.Resize(window.getSize());
+	ScoreDisplay_OBJ.SetScore(score, window.getSize());
+    //
 
-
+    // NPC / PACKAGE SYSTEMS
+    NpcSpawnSystem npc_spawn;                // spawns and animates NPCs
+    PackageCollectSystem package_collect;    // courier -> npc pickup logic
+    PackageDeliverySystem package_delivery;  // courier_house delivery logic
+    //
 
     // MAIN GAME LOOP
     //
     while (window.isOpen()) {
         sf::Event event; // used as main event handler
+
         // for window closing btn
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -102,10 +112,14 @@ int main() {
             }
             else if (event.type == sf::Event::Resized) {
                 sf::Vector2u NewSize(event.size.width, event.size.height);
+
+                ClockDisplay_OBJ.Resize(NewSize);
+                ScoreDisplay_OBJ.Resize(NewSize);
+
                 if (game_over == true) {
-                    UI_GameOver_OBJ.relayout(window.getSize());
+                    UI_GameOver_OBJ.relayout(NewSize);
                     black_screen.setSize(sf::Vector2f(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y)));
-				}
+                }
             }
             else if (game_over == true) {
                 if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
@@ -118,8 +132,18 @@ int main() {
 
         if (game_over == false) {
 
-            // player movement
-            HandlePlayerMovement(sprites.player, 180.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time);
+            // player movement (NOTE: last parameter controls "carrying package" textures)
+            HandlePlayerMovement(
+                sprites.player,
+                180.0f,
+                map_width,
+                map_height,
+                textures,
+                collision,
+                Animation_OBJ,
+                delta_time,
+                package_collected
+            );
 
             // vehicle movement update
             movement.Update(delta_time, sprites, textures);
@@ -127,7 +151,30 @@ int main() {
             // camera follows the player but stays inside map bounds
             HandleCameraView(sprites.player, camera, map_width, map_height);
 
+            // player hitbox (configured in hitbox_config.txt)
             sf::FloatRect player_box = collision.GetPlayerBox(sprites, collision);
+
+            // NPC spawn + idle animation + expiration penalties
+            npc_spawn.Update(delta_time, sprites, textures);
+
+            // collect package (hold inside NPC zone for 2 sec)
+            package_collect.Update(delta_time, player_box, npc_spawn, package_collected);
+
+            // deliver package (hold inside courier_house zone for 2 sec)
+            package_delivery.Update(delta_time, player_box, sprites, package_collected, score);
+
+            // update UI text
+            ClockDisplay_OBJ.UpdateText();
+            ScoreDisplay_OBJ.SetScore(score, window.getSize());
+
+            // TIME'S UP => GAME OVER
+            if (ClockDisplay_OBJ.TimesUp()) {
+                game_over = true;
+                window.setView(window.getDefaultView());
+                UI_GameOver_OBJ.setScore(score);
+                UI_GameOver_OBJ.relayout(window.getSize());
+                UI_GameOver_OBJ.UpdatePositions(window.getSize());
+            }
 
             // player intersection with non-static objects
             bool hit =
@@ -142,111 +189,92 @@ int main() {
                 collision.PlayerHitsAnyVehicle(sprites.bus_1_left, "bus_1_left", collision.VehicleConfig, player_box) ||
                 collision.PlayerHitsAnyVehicle(sprites.bus_1_right, "bus_1_right", collision.VehicleConfig, player_box);
 
-
             if (hit) {
                 game_over = true;
                 window.setView(window.getDefaultView());
                 UI_GameOver_OBJ.setScore(score);
                 UI_GameOver_OBJ.relayout(window.getSize());
-				UI_GameOver_OBJ.UpdatePositions(window.getSize());
-
+                UI_GameOver_OBJ.UpdatePositions(window.getSize());
 
                 // clear all old events
                 while (window.pollEvent(event)) {}
             }
-
         }
 
         window.clear();
 
-            if (game_over == false) {
-                window.setView(camera);
-                // drawing order
-                window.draw(sprites.map);
-                window.draw(sprites.player);
+        if (game_over == false) {
+            window.setView(camera);
 
-                for (auto& car_1_left : sprites.car_1_left) {
-                    window.draw(car_1_left);
-                }
-                for (auto& car_1_right : sprites.car_1_right) {
-                    window.draw(car_1_right);
-                }
-                for (auto& car_2_left : sprites.car_2_left) {
-                    window.draw(car_2_left);
-                }
-                for (auto& car_2_right : sprites.car_2_right) {
-                    window.draw(car_2_right);
-                }
-                for (auto& truck_1_left : sprites.truck_1_left) {
-                    window.draw(truck_1_left);
-                }
-                for (auto& truck_1_right : sprites.truck_1_right) {
-                    window.draw(truck_1_right);
-                }
-                for (auto& pickup_truck_1_left : sprites.pickup_truck_1_left) {
-                    window.draw(pickup_truck_1_left);
-                }
-                for (auto& pickup_truck_1_right : sprites.pickup_truck_1_right) {
-                    window.draw(pickup_truck_1_right);
-                }
-                for (auto& bus_1_left : sprites.bus_1_left) {
-                    window.draw(bus_1_left);
-                }
-                for (auto& bus_1_right : sprites.bus_1_right) {
-                    window.draw(bus_1_right);
-                }
-                for (auto& house : sprites.house_1) {
-                    window.draw(house);
-                }
-                for (auto& block : sprites.block_1) {
-                    window.draw(block);
-                }
-                for (auto& courier_house : sprites.courier_house) {
-                    window.draw(courier_house);
-                }
-                for (auto& church : sprites.church_1) {
-                    window.draw(church);
-                }
-                for (auto& bush : sprites.bush_1) {
-                    window.draw(bush);
-                }
-                for (auto& sunbed : sprites.sunbed_1) {
-                    window.draw(sunbed);
-                }
-                for (auto& blue_umbrella : sprites.blue_umbrella_1) {
-                    window.draw(blue_umbrella);
-                }
-                for (auto& tree : sprites.tree_1) {
-                    window.draw(tree);
-                }
+            // drawing order
+            window.draw(sprites.map);
 
-                // DRAW THE STATIC HITBOXES
-                //
-                collision.DrawHitBoxes(window);
-                //
-                // TOFIX: TO BE REMOVED ON FINAL RELEASE!!!
+            // player
+            window.draw(sprites.player);
+
+            for (auto& car_1_left : sprites.car_1_left) window.draw(car_1_left);
+            for (auto& car_1_right : sprites.car_1_right) window.draw(car_1_right);
+            for (auto& car_2_left : sprites.car_2_left) window.draw(car_2_left);
+            for (auto& car_2_right : sprites.car_2_right) window.draw(car_2_right);
+            for (auto& truck_1_left : sprites.truck_1_left) window.draw(truck_1_left);
+            for (auto& truck_1_right : sprites.truck_1_right) window.draw(truck_1_right);
+            for (auto& pickup_truck_1_left : sprites.pickup_truck_1_left) window.draw(pickup_truck_1_left);
+            for (auto& pickup_truck_1_right : sprites.pickup_truck_1_right) window.draw(pickup_truck_1_right);
+            for (auto& bus_1_left : sprites.bus_1_left) window.draw(bus_1_left);
+            for (auto& bus_1_right : sprites.bus_1_right) window.draw(bus_1_right);
+
+            // buildings/props
+            for (auto& house : sprites.house_1) window.draw(house);
+            for (auto& block : sprites.block_1) window.draw(block);
+            for (auto& courier_house : sprites.courier_house) window.draw(courier_house);
+            for (auto& church : sprites.church_1) window.draw(church);
+            for (auto& bush : sprites.bush_1) window.draw(bush);
+            for (auto& sunbed : sprites.sunbed_1) window.draw(sunbed);
+            for (auto& blue_umbrella : sprites.blue_umbrella_1) window.draw(blue_umbrella);
+            for (auto& tree : sprites.tree_1) window.draw(tree);
+
+            // NPCs MUST be drawn AFTER buildings (to appear "in front")
+            window.draw(npc_spawn);
 
 
+            // DRAW THE STATIC HITBOXES
+            //
+            collision.DrawHitBoxes(window);
+            //
+            // TOFIX: TO BE REMOVED ON FINAL RELEASE!!!
 
-                // TO BE REMOVED LATER!!!!
-                //
-                // TEST FOR RELOADING EVERYTHING
-                // 
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
-                    // reload positions
-                    position_management.PosInit(sprites, textures);
-                    movement.PosInit(sprites, textures);
-                    // reload the hitboxes
-                    collision.AddHitBox(sprites);
-                }
+
+            //TEST ONLY
+            // npc_spawn.DrawDebugZones(window);
+            // package_delivery.DrawDebugZone(window);
+            
+
+            // draw the clock + score in screen space
+            window.setView(window.getDefaultView());
+            window.draw(ClockDisplay_OBJ);
+            window.draw(ScoreDisplay_OBJ);
+
+            // TO BE REMOVED LATER!!!!
+            //
+            // TEST FOR RELOADING EVERYTHING
+            //
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+                // reload positions
+                position_management.PosInit(sprites, textures);
+                movement.PosInit(sprites, textures);
+                // reload the hitboxes
+                collision.AddHitBox(sprites);
             }
-            else {
-                window.setView(window.getDefaultView());
-                window.draw(black_screen);
-                window.draw(UI_GameOver_OBJ);
-            }
+        }
+        else {
+            window.setView(window.getDefaultView());
+            window.draw(black_screen);
+            window.draw(UI_GameOver_OBJ);
+        }
 
-        // to vizualize everything                                                      
+        // to vizualize everything
         window.display();
     }
+
+    return 0;
 }
