@@ -53,14 +53,5 @@
     <ClInclude Include="Package_delivery.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Clock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Package_collect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Npc-s_spawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

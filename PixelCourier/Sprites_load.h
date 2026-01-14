@@ -34,15 +34,7 @@ public:
 	sf::Sprite bottom_moving_courier_2;
 	sf::Sprite left_moving_courier_1;
 	sf::Sprite right_moving_courier_1;
-	// with package
-	sf::Sprite left_moving_courier_with_package_1;
-	sf::Sprite left_moving_courier_with_package_2;
-	sf::Sprite right_moving_courier_with_package_1;
-	sf::Sprite right_moving_courier_with_package_2;
-	sf::Sprite top_moving_courier_with_package_1;
-	sf::Sprite top_moving_courier_with_package_2;
-	sf::Sprite bottom_moving_courier_with_package_1;
-	sf::Sprite bottom_moving_courier_with_package_2;
+
 
 
 
@@ -79,16 +71,6 @@ public:
 	std::list<sf::Sprite> bus_1_right;
 
 
-	// npc-s
-	std::list<sf::Sprite> person_1_m1;
-	std::list<sf::Sprite> person_1_m2;
-	std::list<sf::Sprite> person_2_m1;
-	std::list<sf::Sprite> person_2_m2;
-	std::list<sf::Sprite> person_3_m1;
-	std::list<sf::Sprite> person_3_m2;
-	std::list<sf::Sprite> person_4_m1;
-	std::list<sf::Sprite> person_4_m2;
-
 
 	// all objects that should have collision (pointers)
 	std::vector<sf::Sprite*> CollisionObjects;
@@ -119,15 +101,6 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	bottom_moving_courier_2.setTexture(textures.bottom_moving_courier_2);
 	left_moving_courier_1.setTexture(textures.left_moving_courier_1);
 	right_moving_courier_1.setTexture(textures.right_moving_courier_1);
-	// with package
-	left_moving_courier_with_package_1.setTexture(textures.left_moving_courier_with_package_1);
-	left_moving_courier_with_package_2.setTexture(textures.left_moving_courier_with_package_2);
-	right_moving_courier_with_package_1.setTexture(textures.right_moving_courier_with_package_1);
-	right_moving_courier_with_package_2.setTexture(textures.right_moving_courier_with_package_2);
-	top_moving_courier_with_package_1.setTexture(textures.top_moving_courier_with_package_1);
-	top_moving_courier_with_package_2.setTexture(textures.top_moving_courier_with_package_2);
-	bottom_moving_courier_with_package_1.setTexture(textures.bottom_moving_courier_with_package_1);
-	bottom_moving_courier_with_package_2.setTexture(textures.bottom_moving_courier_with_package_2)	;
 
 	// clear all vectors before filling them with new sprites
 	// this will load the sprites from Position_management.h
@@ -190,15 +163,6 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 
 	bus_1_left.push_back(sf::Sprite(textures.bus_1_left));
 	bus_1_right.push_back(sf::Sprite(textures.bus_1_right));
-
-	// npc-s
-	person_1_m1.push_back(sf::Sprite(textures.person_1_m1));
-	person_1_m2.push_back(sf::Sprite(textures.person_1_m2));
-	person_2_m1.push_back(sf::Sprite(textures.person_2_m1));
-	person_2_m2.push_back(sf::Sprite(textures.person_2_m2));
-	person_3_m1.push_back(sf::Sprite(textures.person_3_m1));
-	person_4_m1.push_back(sf::Sprite(textures.person_4_m1));
-	person_4_m2.push_back(sf::Sprite(textures.person_4_m2));
 
 
 	// Collision objects

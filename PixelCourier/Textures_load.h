@@ -28,15 +28,6 @@ public:
 	sf::Texture bottom_moving_courier_2;
 	sf::Texture left_moving_courier_1;
 	sf::Texture right_moving_courier_1;
-	// with package
-	sf::Texture left_moving_courier_with_package_1;
-	sf::Texture left_moving_courier_with_package_2;
-	sf::Texture right_moving_courier_with_package_1;
-	sf::Texture right_moving_courier_with_package_2;
-	sf::Texture top_moving_courier_with_package_1;
-	sf::Texture top_moving_courier_with_package_2;
-	sf::Texture bottom_moving_courier_with_package_1;
-	sf::Texture bottom_moving_courier_with_package_2;
 
 	// from buildings
 	sf::Texture house_1;
@@ -61,16 +52,6 @@ public:
 	sf::Texture pickup_truck_1_right;
 	sf::Texture bus_1_left;
 	sf::Texture bus_1_right;
-
-	// from npc-s
-	sf::Texture person_1_m1;
-	sf::Texture person_1_m2;
-	sf::Texture person_2_m1;
-	sf::Texture person_2_m2;
-	sf::Texture person_3_m1;
-	sf::Texture person_3_m2;
-	sf::Texture person_4_m1;
-	sf::Texture person_4_m2;
 
 	bool LoadAllTextures();
 
@@ -98,16 +79,6 @@ inline bool Textures::LoadAllTextures() {
 	success &= bottom_moving_courier_2.loadFromFile("assets/courier/bottom_moving_courier_2.png");
 	success &= left_moving_courier_1.loadFromFile("assets/courier/left_moving_courier_1.png");
 	success &= right_moving_courier_1.loadFromFile("assets/courier/right_moving_courier_1.png");
-	// with package
-	success &= left_moving_courier_with_package_1.loadFromFile("assets/courier/left_moving_courier_with_package_1.png");
-	success &= left_moving_courier_with_package_2.loadFromFile("assets/courier/left_moving_courier_with_package_2.png");
-	success &= right_moving_courier_with_package_1.loadFromFile("assets/courier/right_moving_courier_with_package_1.png");
-	success &= right_moving_courier_with_package_2.loadFromFile("assets/courier/right_moving_courier_with_package_2.png");
-	success &= top_moving_courier_with_package_1.loadFromFile("assets/courier/top_moving_courier_with_package_1.png");
-	success &= top_moving_courier_with_package_2.loadFromFile("assets/courier/top_moving_courier_with_package_2.png");
-	success &= bottom_moving_courier_with_package_1.loadFromFile("assets/courier/bottom_moving_courier_with_package_1.png");
-	success &= bottom_moving_courier_with_package_2.loadFromFile("assets/courier/bottom_moving_courier_with_package_2.png");
-
 
 	// from buildings
 	success &= house_1.loadFromFile("assets/buildings/house_1.png");
@@ -132,17 +103,6 @@ inline bool Textures::LoadAllTextures() {
 	success &= pickup_truck_1_right.loadFromFile("assets/vehicles/pickup_truck_1_right.png");
 	success &= bus_1_left.loadFromFile("assets/vehicles/bus_1_left.png");
 	success &= bus_1_right.loadFromFile("assets/vehicles/bus_1_right.png");
-
-	// from npc-s
-	success &= person_1_m1.loadFromFile("assets/npc-s/person_1_m1.png");
-	success &= person_1_m2.loadFromFile("assets/npc-s/person_1_m2.png");
-	success &= person_2_m1.loadFromFile("assets/npc-s/person_2_m1.png");
-	success &= person_2_m2.loadFromFile("assets/npc-s/person_2_m2.png");
-	success &= person_3_m1.loadFromFile("assets/npc-s/person_3_m1.png");
-	success &= person_3_m2.loadFromFile("assets/npc-s/person_3_m2.png");
-	success &= person_4_m1.loadFromFile("assets/npc-s/person_4_m1.png");
-	success &= person_4_m2.loadFromFile("assets/npc-s/person_4_m2.png");
-
 
 	return success;
 }

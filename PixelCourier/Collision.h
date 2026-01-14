@@ -146,52 +146,7 @@ public:
                 VehicleConfig[name] = VehicleHitBoxConfigOBJ;
             }
         }
-
-        // npc-s hitboxes
-        while (file >> name >> width >> height >> y_offset >> x_offset) {
-            if (name == "person_1_m1") {
-                for (auto& sprite : sprites.person_1_m1) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_1_m2") {
-                for (auto& sprite : sprites.person_1_m2) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_2_m1") {
-                for (auto& sprite : sprites.person_2_m1) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_2_m2") {
-                for (auto& sprite : sprites.person_2_m2) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_3_m1") {
-                for (auto& sprite : sprites.person_3_m1) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_3_m2") {
-                for (auto& sprite : sprites.person_3_m2) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_4_m1") {
-                for (auto& sprite : sprites.person_4_m1) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-            }
-            else if (name == "person_4_m2") {
-                for (auto& sprite : sprites.person_4_m2) {
-                    StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
-                }
-			}
-        }
     }
-
 
     
     void DrawHitBoxes(sf::RenderWindow& window) {
