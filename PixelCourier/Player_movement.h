@@ -26,12 +26,13 @@ struct Animation {
     last_direction = LEFT; // setting default direction to LEFT
     // also used in switch case for animation change depending on last direction
     // NOTE: last_direction uses last know direction of player movement, which does not insta change when another movement kay is pressed
+    bool carrying_package = false;
 };
 Animation Animation_OBJ;
 
 // NOTE: for the player we take
 inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_width, float map_height,
-    Textures& textures, Collision& collision, Animation& animation, float delta_time) {
+    Textures& textures, Collision& collision, Animation& animation, float delta_time, bool is_carrying_package) {
 
     sf::Vector2f movement(0.0, 0.0);
     animation.is_moving = false; // reset moving flag
@@ -83,18 +84,34 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
             animation.frame_swap = !animation.frame_swap; // swap frame
         }
         // add 4 cases depending on which direction player is moving to apply the texture
+        // if courier is with package - change the textures
         switch (animation.last_direction) {
         case Animation::LEFT:
-            player.setTexture(animation.frame_swap ? textures.left_moving_courier_1 : textures.left_courier);
+            if (!is_carrying_package)
+                player.setTexture(animation.frame_swap ? textures.left_moving_courier_1 : textures.left_courier);
+            else
+                player.setTexture(animation.frame_swap ? textures.left_moving_courier_with_package_1 : textures.left_moving_courier_with_package_2);
             break;
+
         case Animation::RIGHT:
-            player.setTexture(animation.frame_swap ? textures.right_moving_courier_1 : textures.right_courier);
+            if (!is_carrying_package)
+                player.setTexture(animation.frame_swap ? textures.right_moving_courier_1 : textures.right_courier);
+            else
+                player.setTexture(animation.frame_swap ? textures.right_moving_courier_with_package_1 : textures.right_moving_courier_with_package_2);
             break;
+
         case Animation::UP:
-            player.setTexture(animation.frame_swap ? textures.top_moving_courier_1 : textures.top_moving_courier_2);
+            if (!is_carrying_package)
+                player.setTexture(animation.frame_swap ? textures.top_moving_courier_1 : textures.top_moving_courier_2);
+            else
+                player.setTexture(animation.frame_swap ? textures.top_moving_courier_with_package_1 : textures.top_moving_courier_with_package_2);
             break;
+
         case Animation::DOWN:
-            player.setTexture(animation.frame_swap ? textures.bottom_moving_courier_1 : textures.bottom_moving_courier_2);
+            if (!is_carrying_package)
+                player.setTexture(animation.frame_swap ? textures.bottom_moving_courier_1 : textures.bottom_moving_courier_2);
+            else
+                player.setTexture(animation.frame_swap ? textures.bottom_moving_courier_with_package_1 : textures.bottom_moving_courier_with_package_2);
             break;
         }
     }
@@ -103,18 +120,23 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
         animation.frame_swap = false;
         switch (animation.last_direction) {
         case Animation::LEFT:
-            player.setTexture(textures.left_courier);
+            player.setTexture(animation.carrying_package ? textures.left_moving_courier_with_package_1
+                : textures.left_courier);
             break;
         case Animation::RIGHT:
-            player.setTexture(textures.right_courier);
+            player.setTexture(animation.carrying_package ? textures.right_moving_courier_with_package_1
+                : textures.right_courier);
             break;
         case Animation::UP:
-            player.setTexture(textures.front_courier);
+            player.setTexture(animation.carrying_package ? textures.top_moving_courier_with_package_1
+                : textures.front_courier);
             break;
         case Animation::DOWN:
-            player.setTexture(textures.back_courier);
+            player.setTexture(animation.carrying_package ? textures.bottom_moving_courier_with_package_1
+                : textures.back_courier);
             break;
         }
+
     }
 
 

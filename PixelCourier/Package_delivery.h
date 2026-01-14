@@ -1,47 +1,98 @@
-// header for random spawning npc-s near buildings and collecting packages around the map
-
 #pragma once
 
-#include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 
-#include "Timer.h"
+#include <chrono>
+
 #include "Sprites_load.h"
+#include "Timer.h"
+#include "Clock.h"
+#include "Score.h"
 
-#include <random>
-#include <vector>
-#include <algorithm>
 
+class PackageDeliverySystem {
+public:
+    PackageDeliverySystem() {
+        SetupDropZone(drop_zone);
+    }
 
-enum BuildingType {
-	house,
-	block
+    void Update(
+        float delta_time,
+        const sf::FloatRect& courier_box,
+        const Sprites& sprites,
+        bool& package_collected,
+        int& score
+    ) {
+        UpdateDropZonePosition(sprites);
+
+        if (!package_collected) {
+            ResetHold();
+            return;
+        }
+
+        const auto now = std::chrono::steady_clock::now();
+        const sf::FloatRect zone = drop_zone.getGlobalBounds();
+
+        if (!zone.intersects(courier_box)) {
+            ResetHold();
+            return;
+        }
+
+        if (!holding) {
+            holding = true;
+            hold_start = now;
+            return;
+        }
+
+        if (now - hold_start >= Timers_OBJ.courier_drop_hold_time) {
+            // delivered
+            package_collected = false;
+
+            // bonus time
+            ClockDisplay_OBJ.AddTime(Timers_OBJ.package_delivered);
+
+            // score
+            score += 1;
+            const sf::Vector2u window_size(1280, 720);
+            sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), "Game");
+
+            ScoreDisplay_OBJ.SetScore(score, window_size);
+
+            ResetHold();
+        }
+    }
+
+    // draw courier_house drop zone
+    void DrawDebugZone(sf::RenderTarget& target) const {
+        target.draw(drop_zone);
+    }
+
+private:
+    // delivery zone around courier_house
+    sf::RectangleShape drop_zone;
+
+    bool holding = false;
+    std::chrono::steady_clock::time_point hold_start{};
+
+private:
+    static void SetupDropZone(sf::RectangleShape& zone) {
+        zone.setSize(sf::Vector2f(100.f, 100.f));
+        zone.setOrigin(zone.getSize().x / 2.f, zone.getSize().y / 2.f);
+
+        // TEST ONLY
+       // zone.setFillColor(sf::Color(200, 160, 0, 80));
+       // zone.setOutlineThickness(2.f);
+       // zone.setOutlineColor(sf::Color(200, 160, 0, 220));
+    }
+
+    void UpdateDropZonePosition(const Sprites& sprites) {
+        if (!sprites.courier_house.empty()) {
+            // center zone on courier_house sprite position
+            drop_zone.setPosition(sprites.courier_house[0].getPosition() + sf::Vector2f(50.0f, 50.0f));
+        }
+    }
+
+    void ResetHold() {
+        holding = false;
+    }
 };
-
-struct BuildingRef {
-	BuildingType bt;
-	const sf::Sprite* s; // pointing exactly to the house/block
-};
-
-std::vector<BuildingRef> CollectAllBuildings(const Sprites& s) {
-	// collecting all the buildings for npc-s spawn
-	std::vector<BuildingRef> collection;
-	collection.reserve(s.house_1.size() + s.block_1.size() /* add the rest when u make em */);
-
-	for (const auto& var : s.house_1) collection.push_back({ BuildingType::house, &var });
-	for (const auto& var : s.block_1) collection.push_back({ BuildingType::block, &var });
-	// add the others after u make em
-	//
-	//
-	//
-
-	return collection;
-}
-
-// 
-//
-
-
-
-
-bool package_delivered = false;
-bool package_taken = false;

@@ -16,6 +16,12 @@
 // TODO: add few more same objects, few more diff + moving cars with collision logic gameover
 
 
+enum NPC_state {
+	idle,
+	moving
+};
+
+
 class PositionManagement {
 public:
 	std::map<sf::Sprite*, sf::Vector2f> ObjectPositions;
@@ -141,6 +147,28 @@ public:
 		it = sprites.tree_1.begin();
 		while (it != sprites.tree_1.end()) { 
 			sprites.CollisionObjects.push_back(&*it); ++it; 
+		}
+
+		while (file >> name >> x_coords >> y_coords) {
+			if(name == "person_1_m1") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_1_m1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_1_m1.push_back(sprite);
+				ObjectPositions[&sprites.person_1_m1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "person_1_m2") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_1_m2);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_1_m2.push_back(sprite);
+				ObjectPositions[&sprites.person_1_m2.back()] = { x_coords, y_coords };
+			}
+			else if (name == "person_2_m1") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_2_m1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_2_m1.push_back(sprite);
+				ObjectPositions[&sprites.person_2_m1.back()] = { x_coords, y_coords };
+			}
+			// others later
 		}
 	}
 };
