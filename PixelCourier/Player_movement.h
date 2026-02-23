@@ -1,4 +1,4 @@
-// player movement + camera vision
+// header for player movement + camera vision
 
 #pragma once
 
@@ -87,17 +87,21 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
         // if courier is with package - change the textures
         switch (animation.last_direction) {
         case Animation::LEFT:
-            if (!is_carrying_package)
+            if (!is_carrying_package) {
                 player.setTexture(animation.frame_swap ? textures.left_moving_courier_1 : textures.left_courier);
-            else
+            }
+            else {
                 player.setTexture(animation.frame_swap ? textures.left_moving_courier_with_package_1 : textures.left_moving_courier_with_package_2);
+            }
             break;
 
         case Animation::RIGHT:
-            if (!is_carrying_package)
+            if (!is_carrying_package) {
                 player.setTexture(animation.frame_swap ? textures.right_moving_courier_1 : textures.right_courier);
-            else
+            }
+            else {
                 player.setTexture(animation.frame_swap ? textures.right_moving_courier_with_package_1 : textures.right_moving_courier_with_package_2);
+            }
             break;
 
         case Animation::UP:
@@ -108,39 +112,15 @@ inline void HandlePlayerMovement(sf::Sprite& player, float speed, float map_widt
             break;
 
         case Animation::DOWN:
-            if (!is_carrying_package)
+            if (!is_carrying_package) {
                 player.setTexture(animation.frame_swap ? textures.bottom_moving_courier_1 : textures.bottom_moving_courier_2);
-            else
+            }
+            else {
                 player.setTexture(animation.frame_swap ? textures.bottom_moving_courier_with_package_1 : textures.bottom_moving_courier_with_package_2);
+            }
             break;
         }
     }
-    // idling
-    else {
-        animation.frame_swap = false;
-        switch (animation.last_direction) {
-        case Animation::LEFT:
-            player.setTexture(animation.carrying_package ? textures.left_moving_courier_with_package_1
-                : textures.left_courier);
-            break;
-        case Animation::RIGHT:
-            player.setTexture(animation.carrying_package ? textures.right_moving_courier_with_package_1
-                : textures.right_courier);
-            break;
-        case Animation::UP:
-            player.setTexture(animation.carrying_package ? textures.top_moving_courier_with_package_1
-                : textures.front_courier);
-            break;
-        case Animation::DOWN:
-            player.setTexture(animation.carrying_package ? textures.bottom_moving_courier_with_package_1
-                : textures.back_courier);
-            break;
-        }
-
-    }
-
-
-
 
 
     // player collision with obj
