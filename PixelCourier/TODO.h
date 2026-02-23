@@ -1,12 +1,11 @@
 // TODO:
 
 // -> ADD:
-// sound effects on game start, on game end, on collecting package, on delivering package
-// add background music loop
-// add fence + dog near the church
+// add dog chasing u automatically when in range (near church)
+// something on the big green grass right from courier house to the beach
 //
-// -> IMPROVE:
-// courier positioning (idling and last position known facing)
-//
+
 // -> FIX:
-// current building positions and add the rest
+// courier cannot walk on water
+// on resize window the score 
+
