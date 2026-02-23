@@ -1,3 +1,5 @@
+// header for clock time visualization
+
 #pragma once
 
 #include <SFML/Graphics.hpp>
@@ -16,7 +18,7 @@ private:
 	std::chrono::seconds time_adjustments; // time difference (+/-)
 	bool started = false; // countdown
 
-	static void TopLeft(sf::Text& text, float padding_x, float padding_y) {
+	void PositionTopLeft(sf::Text& text, float padding_x, float padding_y) {
 		sf::FloatRect bounds = text.getLocalBounds();
 		text.setOrigin(bounds.left, bounds.top);
 		text.setPosition(padding_x, padding_y);
@@ -31,10 +33,9 @@ public:
 		font.loadFromFile("fonts/DynaPuff-Bold.ttf");
 		clock_text.setFont(font);
 		clock_text.setFillColor(sf::Color::White);
-		clock_text.setStyle(sf::Text::Bold);
 		clock_text.setCharacterSize(32);
 		clock_text.setString("TIME: 0");
-		TopLeft(clock_text, 20.f, 15.f);
+		PositionTopLeft(clock_text, 20.f, 15.f);
 	}
 
 	void StartCountdown() {
@@ -48,7 +49,7 @@ public:
 	void UpdateText() {
 		int seconds_left = GetSecondsLeft();
 		clock_text.setString("TIME: " + std::to_string(seconds_left)); // string change time
-		TopLeft(clock_text, clock_text.getPosition().x, clock_text.getPosition().y); // position set no change
+		PositionTopLeft(clock_text, clock_text.getPosition().x, clock_text.getPosition().y); // position set no change
 	}
 
 	void AddTime(const std::chrono::seconds& seconds) {
@@ -86,7 +87,7 @@ public:
 		unsigned int char_size = std::max<unsigned>(12, static_cast<unsigned int>(size.y * 0.045f));
 		clock_text.setCharacterSize(char_size);
 
-		TopLeft(clock_text, std::max(12.f, size.x * 0.015f), std::max(10.f, size.y * 0.015f));
+		PositionTopLeft(clock_text, std::max(12.f, size.x * 0.015f), std::max(10.f, size.y * 0.015f));
 	}
 };
 ClockDisplay ClockDisplay_OBJ;
