@@ -1,5 +1,5 @@
-// header for applying sprites to textures
-
+// header for applying sprites to textures 
+ 
 #pragma once
 
 #include <SFML/Graphics.hpp>
