@@ -1,4 +1,4 @@
-// applying sprites to textures
+// header for applying sprites to textures
 
 #pragma once
 
@@ -103,7 +103,7 @@ inline void Sprites::CreateAllSprites(Textures& textures) {
 	player.setTexture(textures.front_courier);
 
 
-	// map sprite (backgound)
+	// map sprite (background)
 	map.setTexture(textures.map);
 
 
