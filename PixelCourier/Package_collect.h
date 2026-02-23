@@ -1,81 +1,75 @@
-#pragma once
+// header for package collect logic
 
-#include <SFML/Graphics.hpp>
+#pragma once 
 
-#include <chrono>
+#include <SFML/Graphics.hpp> 
 
-#include "Npc-s_spawn.h"
-#include "Timer.h"
-#include "Clock.h"
+#include <chrono> 
+
+#include "Npc-s_spawn.h" 
+#include "Timer.h" 
+#include "Clock.h" 
 
 
-class PackageCollectSystem {
-public:
-    void Update(
-        float delta_time,
-        const sf::FloatRect& courier_box,
-        NpcSpawnSystem& npc_system,
-        bool& package_collected
-    ) {
-        if (package_collected) {
-            // already carrying a package
-            ResetHold();
-            return;
-        }
+class PackageCollectSystem { 
+private: 
+	bool inside_npc_hitbox = false; // checks if courier inside npc pickup zone
+	std::chrono::steady_clock::time_point in_zone_on_npc_for_package_collect; 
+	int current_npc_index = -1; // in which npc hitbox courier is 
 
-        NpcSpawnSystem::NpcSlot* slots = npc_system.GetSlots();
-        int slotCount = npc_system.GetSlotCount();
+public: 
+	void Update(float delta_time, const sf::FloatRect& courier_box, NpcSpawnSystem& npc_system, bool& package_collected, bool& play_collect_sound) {
+		if (package_collected == true) {
+			inside_npc_hitbox = false;
+			current_npc_index = -1;
+			return;
+		}
+		play_collect_sound = false;
 
-        const auto now = std::chrono::steady_clock::now();
+		NpcSpawnSystem::NpcSlot* slots = npc_system.GetSlots(); 
 
-        // If courier is inside any npc zone, we hold on that npc only
-        int hit_slot = -1;
-        for (int i = 0; i < slotCount; ++i) {
-            if (!slots[i].active) continue;
+		int slot_count = npc_system.GetSlotCount(); 
+		const auto now = std::chrono::steady_clock::now(); 
 
-            const sf::FloatRect zone = slots[i].interaction_zone.getGlobalBounds();
-            if (zone.intersects(courier_box)) {
-                hit_slot = i;
-                break;
-            }
-        }
+		int npc_index = -1; // checks if courier leaves the zone before timer runs out 
 
-        if (hit_slot == -1) {
-            ResetHold();
-            return;
-        }
+		// if there are any active npc-s 
+		for (int i = 0; i < slot_count; ++i) { 
+			if (!slots[i].active) continue; // if no active slots -> skip immediately 
 
-        // started holding on a different npc -> reset
-        if (!holding || current_slot != hit_slot) {
-            holding = true;
-            current_slot = hit_slot;
-            hold_start = now;
-            return;
-        }
+			// if courier inside the npc interaction zone 
+			if (slots[i].interaction_zone.getGlobalBounds().intersects(courier_box)) { 
+				npc_index = i; if (inside_npc_hitbox == false || current_npc_index != i) { 
+					in_zone_on_npc_for_package_collect = now; 
+					inside_npc_hitbox = true; 
+					current_npc_index = i; 
+					return; 
+				} 
+				break; 
+			} 
+		} 
 
-        // still holding on same npc
-        if (now - hold_start >= Timers_OBJ.npc_pickup_hold_time) {
-            // pickup complete
-            package_collected = true;
+		// if not in npc zone for package collect -> reset timer 
+		if (npc_index == -1) { 
+			inside_npc_hitbox = false; 
+			current_npc_index = -1; 
+			return; 
+		} 
 
-            // bonus time
-            ClockDisplay_OBJ.AddTime(Timers_OBJ.taken_package);
-
-            // despawn npc
-            slots[current_slot].active = false;
-
-            ResetHold();
-        }
-    }
-
-private:
-    bool holding = false;
-    int current_slot = -1;
-    std::chrono::steady_clock::time_point hold_start{};
-
-private:
-    void ResetHold() {
-        holding = false;
-        current_slot = -1;
-    }
+		// if courier inside the npc slot and for >= 2sec 
+		if (inside_npc_hitbox == true && current_npc_index != -1) { 
+			if (now - in_zone_on_npc_for_package_collect >= Timers_OBJ.npc_pickup_hold_time) { 
+				// pickup complete 
+				package_collected = true;
+				play_collect_sound = true;
+				// bonus time 
+				ClockDisplay_OBJ.AddTime(Timers_OBJ.taken_package); 
+				// despawn npc 
+				slots[current_npc_index].active = false; 
+				// reset on success 
+				inside_npc_hitbox = false; 
+				current_npc_index = -1; 
+			} 
+		} 
+	} 
 };
