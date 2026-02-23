@@ -29,6 +29,13 @@ int main() {
     window.setFramerateLimit(60);
     //
 
+    // ICON ON RENDERING WINDOW
+    sf::Image icon;
+    if (icon.loadFromFile("assets/icon/icon.png")) {
+        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    }
+    //
+
     // FOR DELTA TIME CALCULATION
     sf::Clock clock;
     //
