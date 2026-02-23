@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11408.102 d18.0
+VisualStudioVersion = 18.2.11408.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PixelCourier", "PixelCourier\PixelCourier.vcxproj", "{FBC571EA-73E3-4849-BE73-14220619B38C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		PixelCourier\hitbox_config.txt = PixelCourier\hitbox_config.txt
+		assets\icon\icon.ico = assets\icon\icon.ico
 		PixelCourier\position_config.txt = PixelCourier\position_config.txt
 		PixelCourier\vehicle_movement.txt = PixelCourier\vehicle_movement.txt
 	EndProjectSection
