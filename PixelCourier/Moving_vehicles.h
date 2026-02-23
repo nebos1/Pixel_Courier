@@ -1,5 +1,4 @@
-// traffic simulation with moving 
-// using 2d coordinate system to spawn, move and despawn vehicles
+// header for traffic simulation with moving using 2d coordinate system to spawn, move and despawn vehicles
 
 #pragma once
 
