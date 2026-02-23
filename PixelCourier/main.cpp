@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/Audio.hpp>
 
 #include <iostream>
 #include <algorithm>
@@ -17,13 +18,12 @@
 #include "Clock.h"
 #include "Timer.h"
 #include "Score.h"
-
 #include "Npc-s_spawn.h"
 #include "Package_collect.h"
 #include "Package_delivery.h"
 
-int main() {
 
+int main() {
     // RENDERING WINDOW FOR VISUALIZATION
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Pixel Courier");
     window.setFramerateLimit(60);
@@ -33,7 +33,8 @@ int main() {
     sf::Clock clock;
     //
 
-    // LOADING RESOURCES
+    // LOADING RESOURCES //
+    // 
     //
     // LOAD ALL TEXTURES
     Textures textures;
@@ -49,14 +50,49 @@ int main() {
     PositionManagement position_management;
     position_management.PosInit(sprites, textures);
     //
+    
+    // LOAD ALL AUDIOS
     //
-    // END OF LOADING RESOURCES
+    sf::Music music_buffer_game_loop;
+
+
+    sf::SoundBuffer sound_buffer_game_over;
+    sf::SoundBuffer sound_buffer_package_collected;
+    sf::SoundBuffer sound_buffer_package_delivered;
+
+    sf::Sound sound_game_over;
+    sf::Sound sound_package_collected;
+    sf::Sound sound_package_delivered;
+
+    sound_buffer_game_over.loadFromFile("sounds/game_over.wav");
+    sound_buffer_package_collected.loadFromFile("sounds/package_collected.wav");
+    sound_buffer_package_delivered.loadFromFile("sounds/package_delivered.wav");
+
+    sound_game_over.setBuffer(sound_buffer_game_over);
+    sound_game_over.setVolume(100.0f);
+
+    sound_package_collected.setBuffer(sound_buffer_package_collected);
+    sound_package_collected.setLoop(false);
+    sound_package_collected.setVolume(100.0f);
+
+    sound_package_delivered.setBuffer(sound_buffer_package_delivered);
+    sound_package_delivered.setLoop(false);
+    sound_package_delivered.setVolume(100.0f);
+
+    music_buffer_game_loop.openFromFile("sounds/game_loop.ogg");
+    music_buffer_game_loop.setLoop(true);
+    music_buffer_game_loop.setVolume(50.0f);
+    music_buffer_game_loop.play();
+    //
+    //
+    // END OF LOADING RESOURCES // 
 
 
     // GAME OVER LOGIC
     bool game_over = false; // flag to check if game is over
     int score = 0;          // player score
     bool package_collected = false; // courier can carry ONLY 1 package at a time
+    bool package_delivered = false; // checks if package courier is holding is delivered 
 
     sf::RectangleShape black_screen(sf::Vector2f(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)));
     black_screen.setFillColor(sf::Color::Black);
@@ -75,7 +111,7 @@ int main() {
     // CAMERA VIEW SETUP
     sf::View camera(sf::FloatRect(0.f, 0.f, 1280.f, 708.f));
     camera.setCenter(sprites.player.getPosition());
-    camera.zoom(0.9f);// later to adjust again
+    camera.zoom(0.4f);// later to adjust again
     //
 
     // VEHICLE MOVEMENT SETUP
@@ -90,8 +126,8 @@ int main() {
     //
 
     // SCORE DISPLAY (TOP-RIGHT)
-    ScoreDisplay_OBJ.Resize(window.getSize());
-	ScoreDisplay_OBJ.SetScore(score, window.getSize());
+    ScoreDisplay_OBJ.Resize(window);
+	ScoreDisplay_OBJ.SetScore(score, window);
     //
 
     // NPC / PACKAGE SYSTEMS
@@ -114,7 +150,7 @@ int main() {
                 sf::Vector2u NewSize(event.size.width, event.size.height);
 
                 ClockDisplay_OBJ.Resize(NewSize);
-                ScoreDisplay_OBJ.Resize(NewSize);
+                ScoreDisplay_OBJ.Resize(window);
 
                 if (game_over == true) {
                     UI_GameOver_OBJ.relayout(NewSize);
@@ -133,17 +169,7 @@ int main() {
         if (game_over == false) {
 
             // player movement (NOTE: last parameter controls "carrying package" textures)
-            HandlePlayerMovement(
-                sprites.player,
-                180.0f,
-                map_width,
-                map_height,
-                textures,
-                collision,
-                Animation_OBJ,
-                delta_time,
-                package_collected
-            );
+            HandlePlayerMovement(sprites.player, 180.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time, package_collected);
 
             // vehicle movement update
             movement.Update(delta_time, sprites, textures);
@@ -157,24 +183,25 @@ int main() {
             // NPC spawn + idle animation + expiration penalties
             npc_spawn.Update(delta_time, sprites, textures);
 
+
+            bool play_collect_sound = false;
             // collect package (hold inside NPC zone for 2 sec)
-            package_collect.Update(delta_time, player_box, npc_spawn, package_collected);
+            package_collect.Update(delta_time, player_box, npc_spawn, package_collected, play_collect_sound);
 
             // deliver package (hold inside courier_house zone for 2 sec)
-            package_delivery.Update(delta_time, player_box, sprites, package_collected, score);
+            package_delivery.Update(delta_time, player_box, sprites, package_collected, package_delivered, score);
 
             // update UI text
             ClockDisplay_OBJ.UpdateText();
-            ScoreDisplay_OBJ.SetScore(score, window.getSize());
+            ScoreDisplay_OBJ.SetScore(score, window);
 
-            // TIME'S UP => GAME OVER
-            if (ClockDisplay_OBJ.TimesUp()) {
-                game_over = true;
-                window.setView(window.getDefaultView());
-                UI_GameOver_OBJ.setScore(score);
-                UI_GameOver_OBJ.relayout(window.getSize());
-                UI_GameOver_OBJ.UpdatePositions(window.getSize());
+            if (play_collect_sound == true) {
+                sound_package_collected.play();
             }
+            if (package_delivered) {
+                sound_package_delivered.play();
+            }
+
 
             // player intersection with non-static objects
             bool hit =
@@ -189,21 +216,36 @@ int main() {
                 collision.PlayerHitsAnyVehicle(sprites.bus_1_left, "bus_1_left", collision.VehicleConfig, player_box) ||
                 collision.PlayerHitsAnyVehicle(sprites.bus_1_right, "bus_1_right", collision.VehicleConfig, player_box);
 
-            if (hit) {
+
+            if (hit || ClockDisplay_OBJ.TimesUp()) {
                 game_over = true;
                 window.setView(window.getDefaultView());
                 UI_GameOver_OBJ.setScore(score);
                 UI_GameOver_OBJ.relayout(window.getSize());
                 UI_GameOver_OBJ.UpdatePositions(window.getSize());
+                music_buffer_game_loop.stop();
+                sound_game_over.play();
 
-                // clear all old events
-                while (window.pollEvent(event)) {}
+                // return func calling black screen and music 
+            }
+
+            // TO BE REMOVED LATER!!!!
+            //
+            // TEST FOR RELOADING EVERYTHING
+            //
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+                // reload positions
+                position_management.PosInit(sprites, textures);
+                movement.PosInit(sprites, textures);
+                // reload the hitboxes
+                collision.AddHitBox(sprites);
             }
         }
 
         window.clear();
 
-        if (game_over == false) {
+        // draw on the old buffer to replace it
+        if(game_over == false) {
             window.setView(camera);
 
             // drawing order
@@ -237,43 +279,19 @@ int main() {
             window.draw(npc_spawn);
 
 
-            // DRAW THE STATIC HITBOXES
-            //
-            collision.DrawHitBoxes(window);
-            //
-            // TOFIX: TO BE REMOVED ON FINAL RELEASE!!!
-
-
-            //TEST ONLY
-            // npc_spawn.DrawDebugZones(window);
-            // package_delivery.DrawDebugZone(window);
-            
-
             // draw the clock + score in screen space
             window.setView(window.getDefaultView());
             window.draw(ClockDisplay_OBJ);
             window.draw(ScoreDisplay_OBJ);
-
-            // TO BE REMOVED LATER!!!!
-            //
-            // TEST FOR RELOADING EVERYTHING
-            //
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
-                // reload positions
-                position_management.PosInit(sprites, textures);
-                movement.PosInit(sprites, textures);
-                // reload the hitboxes
-                collision.AddHitBox(sprites);
-            }
         }
         else {
             window.setView(window.getDefaultView());
             window.draw(black_screen);
             window.draw(UI_GameOver_OBJ);
         }
-
-        // to vizualize everything
+        // to visualize everything
         window.display();
+
     }
 
     return 0;
