@@ -1,5 +1,4 @@
-// apply positions to all static objects on the map using txt file
-// apply starting position to the player
+// header for applying positions to all static objects on the map using txt file and applying starting position to the player
 
 #pragma once
 
