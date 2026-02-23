@@ -1,4 +1,4 @@
-// different timers depending on the events happening 
+// header with different timers depending on the events happening 
 
 #pragma once
 
@@ -27,6 +27,7 @@ struct Timers {
 
 	// NPC IDLE ANIMATION
 	const std::chrono::milliseconds npc_idle_anim_interval{ 500 }; // 0.5 sec texture swap
+
 };
 
 static Timers Timers_OBJ;
