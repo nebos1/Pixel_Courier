@@ -1,5 +1,4 @@
-// apply collision border to the object using txt file
-// and apply collision logic to the object
+// header to apply collision border to the object using txt file and apply collision logic to the object
 
 #pragma once
 #include <SFML/Graphics.hpp>
