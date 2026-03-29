@@ -1,0 +1,83 @@
+#include "TexturesLoad.h"
+
+// load all textures from files
+bool Textures::LoadAllTextures() {
+
+	bool success = true;
+
+	// from player
+	success &= player.loadFromFile("assets/courier/front_view_courier.png");
+
+	// from map
+	success &= map.loadFromFile("assets/map/map.png");
+
+	// from courier (apply idling textures based on position)
+	success &= front_courier.loadFromFile("assets/courier/front_view_courier.png");
+	success &= back_courier.loadFromFile("assets/courier/back_view_courier.png");
+	success &= left_courier.loadFromFile("assets/courier/left_view_courier.png");
+	success &= right_courier.loadFromFile("assets/courier/right_view_courier.png");
+
+	// apply moving sprites of the courier based on position
+	success &= top_moving_courier_1.loadFromFile("assets/courier/top_moving_courier_1.png");
+	success &= top_moving_courier_2.loadFromFile("assets/courier/top_moving_courier_2.png");
+	success &= bottom_moving_courier_1.loadFromFile("assets/courier/bottom_moving_courier_1.png");
+	success &= bottom_moving_courier_2.loadFromFile("assets/courier/bottom_moving_courier_2.png");
+	success &= left_moving_courier_1.loadFromFile("assets/courier/left_moving_courier_1.png");
+	success &= right_moving_courier_1.loadFromFile("assets/courier/right_moving_courier_1.png");
+
+	// with package
+	success &= left_moving_courier_with_package_1.loadFromFile("assets/courier/left_moving_courier_with_package_1.png");
+	success &= left_moving_courier_with_package_2.loadFromFile("assets/courier/left_moving_courier_with_package_2.png");
+	success &= right_moving_courier_with_package_1.loadFromFile("assets/courier/right_moving_courier_with_package_1.png");
+	success &= right_moving_courier_with_package_2.loadFromFile("assets/courier/right_moving_courier_with_package_2.png");
+	success &= top_moving_courier_with_package_1.loadFromFile("assets/courier/top_moving_courier_with_package_1.png");
+	success &= top_moving_courier_with_package_2.loadFromFile("assets/courier/top_moving_courier_with_package_2.png");
+	success &= bottom_moving_courier_with_package_1.loadFromFile("assets/courier/bottom_moving_courier_with_package_1.png");
+	success &= bottom_moving_courier_with_package_2.loadFromFile("assets/courier/bottom_moving_courier_with_package_2.png");
+
+	// from buildings
+	success &= house_1.loadFromFile("assets/buildings/house_1.png");
+	success &= block_1.loadFromFile("assets/buildings/block_1.png");
+	success &= courier_house.loadFromFile("assets/buildings/courier_house.png");
+	success &= church_1.loadFromFile("assets/buildings/church_1.png");
+
+	// from other
+	success &= bush_1.loadFromFile("assets/other/bush_1.png");
+	success &= sunbed_1.loadFromFile("assets/other/sunbed_1.png");
+	success &= blue_umbrella_1.loadFromFile("assets/other/blue_umbrella_1.png");
+	success &= tree_1.loadFromFile("assets/other/tree_1.png");
+
+	// from dog
+	success &= dog_1_running_left_1.loadFromFile("assets/animals/dog_1_running_left_1.png");
+	success &= dog_1_running_left_2.loadFromFile("assets/animals/dog_1_running_left_2.png");
+	success &= dog_1_running_right_1.loadFromFile("assets/animals/dog_1_running_right_1.png");
+	success &= dog_1_running_right_2.loadFromFile("assets/animals/dog_1_running_right_2.png");
+	success &= dog_1_running_up_1.loadFromFile("assets/animals/dog_1_running_up_1.png");
+	success &= dog_1_running_up_2.loadFromFile("assets/animals/dog_1_running_up_2.png");
+	success &= dog_1_running_down_1.loadFromFile("assets/animals/dog_1_running_down_1.png");
+	success &= dog_1_running_down_2.loadFromFile("assets/animals/dog_1_running_down_2.png");
+
+	// from vehicles
+	success &= car_1_left.loadFromFile("assets/vehicles/car_1_left.png");
+	success &= car_1_right.loadFromFile("assets/vehicles/car_1_right.png");
+	success &= car_2_left.loadFromFile("assets/vehicles/car_2_left.png");
+	success &= car_2_right.loadFromFile("assets/vehicles/car_2_right.png");
+	success &= truck_1_left.loadFromFile("assets/vehicles/truck_1_left.png");
+	success &= truck_1_right.loadFromFile("assets/vehicles/truck_1_right.png");
+	success &= pickup_truck_1_left.loadFromFile("assets/vehicles/pickup_truck_1_left.png");
+	success &= pickup_truck_1_right.loadFromFile("assets/vehicles/pickup_truck_1_right.png");
+	success &= bus_1_left.loadFromFile("assets/vehicles/bus_1_left.png");
+	success &= bus_1_right.loadFromFile("assets/vehicles/bus_1_right.png");
+
+	// from npc-s
+	success &= person_1_m1.loadFromFile("assets/npc-s/person_1_m1.png");
+	success &= person_1_m2.loadFromFile("assets/npc-s/person_1_m2.png");
+	success &= person_2_m1.loadFromFile("assets/npc-s/person_2_m1.png");
+	success &= person_2_m2.loadFromFile("assets/npc-s/person_2_m2.png");
+	success &= person_3_m1.loadFromFile("assets/npc-s/person_3_m1.png");
+	success &= person_3_m2.loadFromFile("assets/npc-s/person_3_m2.png");
+	success &= person_4_m1.loadFromFile("assets/npc-s/person_4_m1.png");
+	success &= person_4_m2.loadFromFile("assets/npc-s/person_4_m2.png");
+
+	return success;
+}
