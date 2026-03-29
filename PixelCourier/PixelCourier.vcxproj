@@ -139,7 +139,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClInclude Include="SpritesLoad.h" />
-    <ClCompile Include="PositionManagement.cpp" />
     <ClCompile Include="SpritesLoad.cpp" />
     <ClCompile Include="StartupErrorLogs.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
