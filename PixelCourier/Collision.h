@@ -3,9 +3,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Sprites_load.h"
-#include "Moving_vehicles.h"
-#include "Player_Movement.h"
+#include "SpritesLoad.h"
+#include "MovingVehicles.h"
 
 #include <map>
 #include <fstream>
@@ -33,7 +32,7 @@ struct VehicleHitBoxConfig {
     float y_offset;
     float x_offset;
 };
-VehicleHitBoxConfig VehicleHitBoxConfigOBJ;
+inline VehicleHitBoxConfig VehicleHitBoxConfigOBJ;
 
 
 class Collision {
@@ -61,8 +60,7 @@ public:
             // getting the relative hitbox and global bounds to calculate the actual position of the hitbox
             sf::FloatRect v_relative_bounds = AdjustHitBox(s, vhbc.width_factor, vhbc.height_factor, vhbc.y_offset, vhbc.x_offset);
             sf::FloatRect v_global_bounds = s.getGlobalBounds();
-            sf::FloatRect v_box_pos(v_global_bounds.left + v_relative_bounds.left, v_global_bounds.top + v_relative_bounds.top,
-                v_relative_bounds.width, v_relative_bounds.height);
+            sf::FloatRect v_box_pos(v_global_bounds.left + v_relative_bounds.left, v_global_bounds.top + v_relative_bounds.top, v_relative_bounds.width, v_relative_bounds.height);
 
             // drawing a test rect 
             sf::RectangleShape shape(sf::Vector2f(v_box_pos.width, v_box_pos.height));
@@ -74,8 +72,9 @@ public:
 
     }
 
-    void AddHitBox(Sprites& sprites) {
+    bool AddHitBox(Sprites& sprites) {
         std::ifstream file("PixelCourier/hitbox_config.txt");
+        if (!file.is_open()) return false;
 
         StaticHitBox.clear();
 
@@ -89,6 +88,10 @@ public:
             //player collision box
             if (name == "player") {
                 StaticHitBox[&sprites.player] = AdjustHitBox(sprites.player, width, height, y_offset, x_offset);
+            }
+            // for dog
+            if (name == "dog") {
+                StaticHitBox[& sprites.dog_1] = AdjustHitBox(sprites.dog_1, width, height, y_offset, x_offset);
             }
             // for building collision boxes
             else if (name == "block_1") {
@@ -188,8 +191,9 @@ public:
                     StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
 			}
-        }
-    }
+		}
+		return true;
+	}
 
 
     
@@ -219,6 +223,7 @@ public:
         return false; // no collision
     }
 
+
 	// taking the updated hitbox position
     inline sf::FloatRect UpdatedBox(const sf::Sprite& sprite, const sf::FloatRect& relative) {
         const sf::FloatRect global = sprite.getGlobalBounds();
@@ -239,6 +244,20 @@ public:
         };
     }
 
+    // getting the dog hitbox
+    inline sf::FloatRect GetDogbox(Sprites& sprites, Collision& collision) {
+        auto it = collision.StaticHitBox.find(&sprites.dog_1);
+        if (it == collision.StaticHitBox.end()) {
+            return sprites.dog_1.getGlobalBounds(); // if not found returning full bounds
+        }
+        // get the relative hitbox and global bounds for actual position 
+        const sf::FloatRect relative = it->second;
+        const sf::FloatRect global = sprites.dog_1.getGlobalBounds();
+        return {
+            global.left + relative.left, global.top + relative.top, relative.width, relative.height
+        };
+    }
+
 	// checking for collision for player with any vehicle
     inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName,
                                      const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
@@ -252,7 +271,13 @@ public:
         }
         return false;
     }
+
+    // checking for collision between player and dog (if collision occurred -> game over)
+    inline bool PlayerHitsDog(const sf::Sprite& dog) {
+
+    }
 };
+
 
 
 

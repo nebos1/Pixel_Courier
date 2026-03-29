@@ -89,5 +89,10 @@ public:
 
 		PositionTopLeft(clock_text, std::max(12.f, size.x * 0.015f), std::max(10.f, size.y * 0.015f));
 	}
+
+	// getting clock pos (used in Score.h)
+	sf::FloatRect GetClockPosition() const {
+		return clock_text.getGlobalBounds();
+	}
 };
 ClockDisplay ClockDisplay_OBJ;
