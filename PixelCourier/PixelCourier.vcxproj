@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClInclude Include="TrespassingAreas.h" />
     <ClInclude Include="SpritesLoad.h" />
     <ClCompile Include="SpritesLoad.cpp" />
     <ClCompile Include="StartupErrorLogs.cpp">
@@ -154,8 +155,6 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Areas.h" />
-    <ClInclude Include="ChasingArea.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="GameOver.h" />
