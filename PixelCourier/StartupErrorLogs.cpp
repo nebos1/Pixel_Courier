@@ -1,5 +1,5 @@
 // main file for error log collection of all types of error eventually occurred during the startup of the program
-// 2 types of errors -> critical and warnings
+// 2 types of errors -> fatal and warnings
 // fatal -> failed to load: textures, sprites, positions, hitboxes
 // warnings -> failed to load: any audio file, icons
 
@@ -61,6 +61,15 @@ bool StartupFatalErrorLogs::CollectFatalStartupErrorLogs() {
 		}
 		catch (const std::exception& e) {
 			fatal_errors.push_back(std::string("Critical system error while loading vehicle paths: ") + e.what());
+		}
+		try {
+			bool loaded_font = font.loadFromFile("fonts/DynaPuff-Bold.ttf");
+			if (!loaded_font) {
+				fatal_errors.push_back("Failed to load font file!");
+			}
+		}
+		catch(const std::exception& e) {
+			fatal_errors.push_back("Critical system error while loading font file!");
 		}
 
 		// checked if > 0 in main function and if so, display all errors in a message box and exit the program, otherwise continue program

@@ -29,6 +29,7 @@ class StartupFatalErrorLogs {
 	PositionManagement position_management;
 	Collision collision;
 	Movement movement;
+	sf::Font font;
 
 public:
 	bool CollectFatalStartupErrorLogs();
