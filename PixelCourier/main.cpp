@@ -32,6 +32,9 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Pixel Courier");
     window.setFramerateLimit(60);
 
+    // track the current win siz
+    sf::View UIView(sf::FloatRect(0.f, 0.f, 1280.f, 720.f));
+
 
     enum class GameState {
         StartupFatalScreen,
@@ -75,11 +78,11 @@ int main() {
             line.setFont(error_text);
             line.setFillColor(sf::Color::Red);
             line.setCharacterSize(18);
-            line.setString("FATAL: " + fatal_errors[i]);
+            line.setString("FATAL ERROR: " + fatal_errors[i]);
             line.setPosition(30.f, 30.f + static_cast<float>(i) * 30.f);
             startup_error_texts.push_back(line);
         }
-        error_text_hint_enter.setString("Press Enter to exit");
+        error_text_hint_enter.setString("Game will not start! Press 'Enter' to exit! ");
         error_text_hint_enter.setPosition(30.f, 30.f + static_cast<float>(fatal_errors.size()) * 30.f + 30.f);
     }
     else if (GameStateENUM == GameState::StartupWarningScreen) {
@@ -88,11 +91,11 @@ int main() {
             line.setFont(error_text);
             line.setFillColor(sf::Color::Yellow);
             line.setCharacterSize(18);
-            line.setString("WARNING: " + warning_errors[i]);
+            line.setString("WARNING ERROR: " + warning_errors[i]);
             line.setPosition(30.f, 30.f + static_cast<float>(i) * 30.f);
             startup_error_texts.push_back(line);
         }
-        error_text_hint_enter.setString("Press Enter to continue");
+        error_text_hint_enter.setString("Game will start! Press 'Enter' to continue! ");
         error_text_hint_enter.setPosition(30.f, 30.f + static_cast<float>(warning_errors.size()) * 30.f + 30.f);
     }
 
@@ -194,6 +197,20 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            // win resize 
+            else if (event.type == sf::Event::Resized) {
+                sf::Vector2u NewSize(event.size.width, event.size.height);
+                UIView.setSize(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y));
+                UIView.setCenter(static_cast<float>(NewSize.x) / 2.f, static_cast<float>(NewSize.y) / 2.f);
+                black_screen.setSize(sf::Vector2f(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y)));
+
+                if (game_over == true) {
+                    UI_GameOver_OBJ.relayout(NewSize);
+                    UI_GameOver_OBJ.UpdatePositions(NewSize);
+                }
+                ClockDisplay_OBJ.Resize(NewSize);
+                ScoreDisplay_OBJ.Resize(NewSize);
+            }
             // startup fatal screen -> Enter exits program
             else if (GameStateENUM == GameState::StartupFatalScreen) {
                 if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
@@ -220,15 +237,6 @@ int main() {
                     sound_package_delivered.setBuffer(sound_buffer_package_delivered);
                     sound_package_delivered.setLoop(false);
                     sound_package_delivered.setVolume(100.0f);
-                }
-            }
-            // win resize
-            else if (event.type == sf::Event::Resized) {
-                sf::Vector2u NewSize(event.size.width, event.size.height);
-
-                if (game_over == true) {
-                    UI_GameOver_OBJ.relayout(NewSize);
-                    black_screen.setSize(sf::Vector2f(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y)));
                 }
             }
             else if (game_over == true) {
@@ -291,7 +299,7 @@ int main() {
 
             if (hit || ClockDisplay_OBJ.TimesUp()) {
                 game_over = true;
-                window.setView(window.getDefaultView());
+                window.setView(UIView);
                 UI_GameOver_OBJ.setScore(score);
                 UI_GameOver_OBJ.relayout(window.getSize());
                 UI_GameOver_OBJ.UpdatePositions(window.getSize());
@@ -318,7 +326,7 @@ int main() {
 
         // startup error screens (fatal or warning)
         if (GameStateENUM == GameState::StartupFatalScreen || GameStateENUM == GameState::StartupWarningScreen) {
-            window.setView(window.getDefaultView());
+            window.setView(UIView);
             window.draw(black_screen);
             for (const auto& text : startup_error_texts) window.draw(text);
             window.draw(error_text_hint_enter);
@@ -357,12 +365,12 @@ int main() {
             window.draw(npc_spawn);
 
             // draw the clock + score in screen space
-            window.setView(window.getDefaultView());
+            window.setView(UIView);
             window.draw(ClockDisplay_OBJ);
             window.draw(ScoreDisplay_OBJ);
         }
         else {
-            window.setView(window.getDefaultView());
+            window.setView(UIView);
             window.draw(black_screen);
             window.draw(UI_GameOver_OBJ);
         }
