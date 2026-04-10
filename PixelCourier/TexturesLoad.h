@@ -50,16 +50,6 @@ public:
 	sf::Texture blue_umbrella_1;
 	sf::Texture tree_1;
 
-	// apply dog moving textures
-	sf::Texture dog_1_running_left_1;
-	sf::Texture dog_1_running_left_2;
-	sf::Texture dog_1_running_right_1;
-	sf::Texture dog_1_running_right_2;
-	sf::Texture dog_1_running_up_1;
-	sf::Texture dog_1_running_up_2;
-	sf::Texture dog_1_running_down_1;
-	sf::Texture dog_1_running_down_2;
-
 	// from vehicles
 	sf::Texture car_1_left;
 	sf::Texture car_1_right;

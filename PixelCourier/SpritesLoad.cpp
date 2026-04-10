@@ -31,17 +31,6 @@ bool Sprites::CreateAllSprites(Textures& textures) {
 	bottom_moving_courier_with_package_1.setTexture(textures.bottom_moving_courier_with_package_1);
 	bottom_moving_courier_with_package_2.setTexture(textures.bottom_moving_courier_with_package_2);
 
-	// dog moving
-	dog_1.setTexture(textures.dog_1_running_left_1);
-
-	dog_1_running_left_1.setTexture(textures.dog_1_running_left_1);
-	dog_1_running_left_2.setTexture(textures.dog_1_running_left_2);
-	dog_1_running_right_1.setTexture(textures.dog_1_running_right_1);
-	dog_1_running_right_2.setTexture(textures.dog_1_running_right_2);
-	dog_1_running_up_1.setTexture(textures.dog_1_running_up_1);
-	dog_1_running_up_2.setTexture(textures.dog_1_running_up_2);
-	dog_1_running_down_1.setTexture(textures.dog_1_running_down_1);
-	dog_1_running_down_2.setTexture(textures.dog_1_running_down_2);
 
 	// clear all vectors before filling them with new sprites
 	// this will load the sprites from Position_management.h

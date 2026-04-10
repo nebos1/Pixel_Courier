@@ -47,16 +47,6 @@ bool Textures::LoadAllTextures() {
 	success &= blue_umbrella_1.loadFromFile("assets/other/blue_umbrella_1.png");
 	success &= tree_1.loadFromFile("assets/other/tree_1.png");
 
-	// from dog
-	success &= dog_1_running_left_1.loadFromFile("assets/animals/dog_1_running_left_1.png");
-	success &= dog_1_running_left_2.loadFromFile("assets/animals/dog_1_running_left_2.png");
-	success &= dog_1_running_right_1.loadFromFile("assets/animals/dog_1_running_right_1.png");
-	success &= dog_1_running_right_2.loadFromFile("assets/animals/dog_1_running_right_2.png");
-	success &= dog_1_running_up_1.loadFromFile("assets/animals/dog_1_running_up_1.png");
-	success &= dog_1_running_up_2.loadFromFile("assets/animals/dog_1_running_up_2.png");
-	success &= dog_1_running_down_1.loadFromFile("assets/animals/dog_1_running_down_1.png");
-	success &= dog_1_running_down_2.loadFromFile("assets/animals/dog_1_running_down_2.png");
-
 	// from vehicles
 	success &= car_1_left.loadFromFile("assets/vehicles/car_1_left.png");
 	success &= car_1_right.loadFromFile("assets/vehicles/car_1_right.png");
