@@ -44,8 +44,7 @@ public:
 
     // used for all dynamic objects drawing a hitbox
     // here only makes the visualization of the hitbox for vehicles, no intersection logic
-    static void DrawVehicleHitBox(sf::RenderTarget& rt, const std::list<sf::Sprite>& list, const std::string& TypeName,
-        std::map<std::string, VehicleHitBoxConfig>& config) {
+    static void DrawVehicleHitBox(sf::RenderTarget& rt, const std::list<sf::Sprite>& list, const std::string& TypeName, std::map<std::string, VehicleHitBoxConfig>& config) {
 
         // searching if the vehicle type exists in the config map
         std::map<std::string, VehicleHitBoxConfig>::const_iterator c_i_1 = config.find(TypeName);
@@ -73,8 +72,8 @@ public:
     }
 
     bool AddHitBox(Sprites& sprites) {
-        std::ifstream file("PixelCourier/hitbox_config.txt");
-        if (!file.is_open()) return false;
+        std::ifstream file_hitbox_config("PixelCourier/hitbox_config.txt");
+        if (!file_hitbox_config.is_open()) return false;
 
         StaticHitBox.clear();
 
@@ -82,16 +81,12 @@ public:
         std::string name;
         float width, height, y_offset, x_offset;
 
-        while (file >> name >> width >> height >> y_offset >> x_offset) {
+        while (file_hitbox_config >> name >> width >> height >> y_offset >> x_offset) {
             // FOR STATIC DRAWABLE OBJECTS ONLY
             // 
             //player collision box
             if (name == "player") {
                 StaticHitBox[&sprites.player] = AdjustHitBox(sprites.player, width, height, y_offset, x_offset);
-            }
-            // for dog
-            if (name == "dog") {
-                StaticHitBox[& sprites.dog_1] = AdjustHitBox(sprites.dog_1, width, height, y_offset, x_offset);
             }
             // for building collision boxes
             else if (name == "block_1") {
@@ -150,7 +145,7 @@ public:
         }
 
         // npc-s hitboxes
-        while (file >> name >> width >> height >> y_offset >> x_offset) {
+        while (file_hitbox_config >> name >> width >> height >> y_offset >> x_offset) {
             if (name == "person_1_m1") {
                 for (auto& sprite : sprites.person_1_m1) {
                     StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
@@ -192,10 +187,7 @@ public:
                 }
 			}
 		}
-		return true;
 	}
-
-
     
     void DrawHitBoxes(sf::RenderWindow& window) {
         for (auto it = StaticHitBox.begin(); it != StaticHitBox.end(); ++it) {
@@ -244,23 +236,8 @@ public:
         };
     }
 
-    // getting the dog hitbox
-    inline sf::FloatRect GetDogbox(Sprites& sprites, Collision& collision) {
-        auto it = collision.StaticHitBox.find(&sprites.dog_1);
-        if (it == collision.StaticHitBox.end()) {
-            return sprites.dog_1.getGlobalBounds(); // if not found returning full bounds
-        }
-        // get the relative hitbox and global bounds for actual position 
-        const sf::FloatRect relative = it->second;
-        const sf::FloatRect global = sprites.dog_1.getGlobalBounds();
-        return {
-            global.left + relative.left, global.top + relative.top, relative.width, relative.height
-        };
-    }
-
 	// checking for collision for player with any vehicle
-    inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName,
-                                     const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
+    inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName, const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
         auto it = vhbc.find(TypeName);
         if (it == vhbc.end()) return false;
         for (const auto& v : vehicles) {
@@ -270,11 +247,6 @@ public:
             if (PlayerBox.intersects(box)) return true;
         }
         return false;
-    }
-
-    // checking for collision between player and dog (if collision occurred -> game over)
-    inline bool PlayerHitsDog(const sf::Sprite& dog) {
-
     }
 };
 

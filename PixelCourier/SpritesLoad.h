@@ -44,18 +44,6 @@ public:
 	sf::Sprite bottom_moving_courier_with_package_1;
 	sf::Sprite bottom_moving_courier_with_package_2;
 
-	// dog
-	sf::Sprite dog_1;
-
-	sf::Sprite dog_1_running_right_1;
-	sf::Sprite dog_1_running_right_2;
-	sf::Sprite dog_1_running_left_1;
-	sf::Sprite dog_1_running_left_2;
-	sf::Sprite dog_1_running_up_1;
-	sf::Sprite dog_1_running_up_2;
-	sf::Sprite dog_1_running_down_1;
-	sf::Sprite dog_1_running_down_2;
-
 
 	// buildings 
 	std::vector<sf::Sprite> house_1;
