@@ -4,10 +4,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Sprites_load.h"
+#include "SpritesLoad.h"
 #include "Collision.h"
 
 #include <algorithm>
+
 
 
 

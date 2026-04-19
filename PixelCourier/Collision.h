@@ -3,9 +3,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Sprites_load.h"
-#include "Moving_vehicles.h"
-#include "Player_Movement.h"
+#include "SpritesLoad.h"
+#include "MovingVehicles.h"
 
 #include <map>
 #include <fstream>
@@ -33,7 +32,7 @@ struct VehicleHitBoxConfig {
     float y_offset;
     float x_offset;
 };
-VehicleHitBoxConfig VehicleHitBoxConfigOBJ;
+inline VehicleHitBoxConfig VehicleHitBoxConfigOBJ;
 
 
 class Collision {
@@ -45,8 +44,7 @@ public:
 
     // used for all dynamic objects drawing a hitbox
     // here only makes the visualization of the hitbox for vehicles, no intersection logic
-    static void DrawVehicleHitBox(sf::RenderTarget& rt, const std::list<sf::Sprite>& list, const std::string& TypeName,
-        std::map<std::string, VehicleHitBoxConfig>& config) {
+    static void DrawVehicleHitBox(sf::RenderTarget& rt, const std::list<sf::Sprite>& list, const std::string& TypeName, std::map<std::string, VehicleHitBoxConfig>& config) {
 
         // searching if the vehicle type exists in the config map
         std::map<std::string, VehicleHitBoxConfig>::const_iterator c_i_1 = config.find(TypeName);
@@ -61,8 +59,7 @@ public:
             // getting the relative hitbox and global bounds to calculate the actual position of the hitbox
             sf::FloatRect v_relative_bounds = AdjustHitBox(s, vhbc.width_factor, vhbc.height_factor, vhbc.y_offset, vhbc.x_offset);
             sf::FloatRect v_global_bounds = s.getGlobalBounds();
-            sf::FloatRect v_box_pos(v_global_bounds.left + v_relative_bounds.left, v_global_bounds.top + v_relative_bounds.top,
-                v_relative_bounds.width, v_relative_bounds.height);
+            sf::FloatRect v_box_pos(v_global_bounds.left + v_relative_bounds.left, v_global_bounds.top + v_relative_bounds.top, v_relative_bounds.width, v_relative_bounds.height);
 
             // drawing a test rect 
             sf::RectangleShape shape(sf::Vector2f(v_box_pos.width, v_box_pos.height));
@@ -74,8 +71,9 @@ public:
 
     }
 
-    void AddHitBox(Sprites& sprites) {
-        std::ifstream file("PixelCourier/hitbox_config.txt");
+    bool AddHitBox(Sprites& sprites) {
+        std::ifstream file_hitbox_config("PixelCourier/hitbox_config.txt");
+        if (!file_hitbox_config.is_open()) return false;
 
         StaticHitBox.clear();
 
@@ -83,7 +81,7 @@ public:
         std::string name;
         float width, height, y_offset, x_offset;
 
-        while (file >> name >> width >> height >> y_offset >> x_offset) {
+        while (file_hitbox_config >> name >> width >> height >> y_offset >> x_offset) {
             // FOR STATIC DRAWABLE OBJECTS ONLY
             // 
             //player collision box
@@ -147,7 +145,7 @@ public:
         }
 
         // npc-s hitboxes
-        while (file >> name >> width >> height >> y_offset >> x_offset) {
+        while (file_hitbox_config >> name >> width >> height >> y_offset >> x_offset) {
             if (name == "person_1_m1") {
                 for (auto& sprite : sprites.person_1_m1) {
                     StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
@@ -188,10 +186,8 @@ public:
                     StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
 			}
-        }
-    }
-
-
+		}
+	}
     
     void DrawHitBoxes(sf::RenderWindow& window) {
         for (auto it = StaticHitBox.begin(); it != StaticHitBox.end(); ++it) {
@@ -219,6 +215,7 @@ public:
         return false; // no collision
     }
 
+
 	// taking the updated hitbox position
     inline sf::FloatRect UpdatedBox(const sf::Sprite& sprite, const sf::FloatRect& relative) {
         const sf::FloatRect global = sprite.getGlobalBounds();
@@ -240,8 +237,7 @@ public:
     }
 
 	// checking for collision for player with any vehicle
-    inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName,
-                                     const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
+    inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName, const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
         auto it = vhbc.find(TypeName);
         if (it == vhbc.end()) return false;
         for (const auto& v : vehicles) {
@@ -253,6 +249,7 @@ public:
         return false;
     }
 };
+
 
 
 

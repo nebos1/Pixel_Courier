@@ -6,7 +6,7 @@
 
 #include <chrono>
 
-#include "Sprites_load.h"
+#include "SpritesLoad.h"
 #include "Timer.h"
 #include "Clock.h"
 #include "Score.h"

@@ -1,66 +1,52 @@
-// header for counting the score through gameplay
+// header for score visualization
 
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
+
+#include "Clock.h"
+
 #include <string>
-#include <algorithm>
 
 class ScoreDisplay : public sf::Drawable {
 private:
-    sf::Font font;
-    sf::Text text;
+	sf::Font font;
+	sf::Text score_text;
 
-    int score = 0;
+	void PositionTopLeftBelowClock(sf::Text& text) {
+		sf::FloatRect clock_pos = ClockDisplay_OBJ.GetClockPosition(); // get clock pos box
 
-    // top right positioning 
-    void PositionTopRight(sf::Text& text, sf::RenderWindow& window) {
-        sf::Vector2u size = window.getSize();
-        sf::FloatRect bounds = text.getLocalBounds();
+		sf::FloatRect bounds = text.getLocalBounds();
+		text.setOrigin(bounds.left, bounds.top);
 
-        float padding_right = 15.f;
-        float padding_top = 10.f;
+		float spacing = 10.f; // space between both rects
+		text.setPosition(clock_pos.left, clock_pos.top + clock_pos.height + spacing);
+	}
 
-        text.setOrigin(bounds.left + bounds.width, bounds.top);
-        text.setPosition((float)size.x - padding_right, padding_top);
-    }
-
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        target.draw(text, states);
-    }
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+		target.draw(score_text, states);
+	}
 
 public:
-    ScoreDisplay() {
-        font.loadFromFile("fonts/DynaPuff-Bold.ttf");
-        text.setFont(font);
-        text.setCharacterSize(32);
-        text.setFillColor(sf::Color::White);
-        text.setString("Score: 0");
-    }
+	ScoreDisplay() {
+		font.loadFromFile("fonts/DynaPuff-Bold.ttf");
+		score_text.setFont(font);
+		score_text.setFillColor(sf::Color::White);
+		score_text.setCharacterSize(32);
+		score_text.setString("SCORE: 0");
+		PositionTopLeftBelowClock(score_text);
+	}
 
-    void Resize(sf::RenderWindow& window) {
-        sf::Vector2u size = window.getSize();
-        unsigned int char_size = std::max<unsigned>(12u, (unsigned int)(size.y * 0.045f));
-        text.setCharacterSize(char_size);
-        PositionTopRight(text, window);
-    }
+	void UpdateScore(int score) {
+		score_text.setString("SCORE: " + std::to_string(score));
+		PositionTopLeftBelowClock(score_text);
+	}
 
-    void SetScore(int new_score, sf::RenderWindow& window) {
-        score = new_score;
-        text.setString("Score: " + std::to_string(score));
-        PositionTopRight(text, window);
-    }
+	void Resize(const sf::Vector2u& new_size) {
+		unsigned int char_size = static_cast<unsigned int>(new_size.y * 0.045f);
+		score_text.setCharacterSize(char_size);
 
-    void Add(int delta, sf::RenderWindow& window) {
-        score += delta;
-        text.setString("Score: " + std::to_string(score));
-        PositionTopRight(text, window);
-    }
-
-    int GetScore() {
-        return score;
-    }
-};
-
+		PositionTopLeftBelowClock(score_text);
+	}
+}; 
 ScoreDisplay ScoreDisplay_OBJ;

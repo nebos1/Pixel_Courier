@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Audio.hpp>
 
@@ -7,61 +7,100 @@
 #include <vector>
 #include <random>
 #include <ctime>
+#include <exception>
 
-#include "Textures_load.h"
-#include "Sprites_load.h"
-#include "Position_management.h"
-#include "Player_movement.h"
+#include "TexturesLoad.h"
+#include "SpritesLoad.h"
+#include "PositionManagement.h"
+#include "PlayerMovement.h"
 #include "Collision.h"
-#include "Moving_vehicles.h"
-#include "Game_over.h"
+#include "MovingVehicles.h"
+#include "GameOver.h"
 #include "Clock.h"
 #include "Timer.h"
 #include "Score.h"
-#include "Npc-s_spawn.h"
-#include "Package_collect.h"
-#include "Package_delivery.h"
-
+#include "NpcsSpawn.h"
+#include "PackageCollect.h"
+#include "PackageDelivery.h"
+#include "StartupErrorLogs.h"
 
 int main() {
-    // RENDERING WINDOW FOR VISUALIZATION
+    StartupFatalErrorLogsOBJ.CollectFatalStartupErrorLogs();
+    StartupWarningErrorLogsOBJ.CollectWarningStartupErrorLogs();
+
+    // create standard render window with different visualizations dependable on diff states
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Pixel Courier");
     window.setFramerateLimit(60);
-    //
 
-    // ICON ON RENDERING WINDOW
-    sf::Image icon;
-    if (icon.loadFromFile("assets/icon/icon.png")) {
-        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    // track the current win siz
+    sf::View UIView(sf::FloatRect(0.f, 0.f, 1280.f, 720.f));
+
+
+    enum class GameState {
+        StartupFatalScreen,
+        StartupWarningScreen,
+        Running,
+        Exit
+    };
+    GameState GameStateENUM;
+
+
+    // determine initial state based on startup errors
+    if (!fatal_errors.empty()) {
+        GameStateENUM = GameState::StartupFatalScreen;
+        for (size_t i = 0; i < fatal_errors.size(); i++) {
+            std::cerr << fatal_errors[i] << std::endl;
+        }
     }
-    //
+    else if (!warning_errors.empty()) {
+        GameStateENUM = GameState::StartupWarningScreen;
+        for (size_t i = 0; i < warning_errors.size(); i++) {
+            std::cerr << warning_errors[i] << std::endl;
+        }
+    }
+    else {
+        GameStateENUM = GameState::Running;
+    }
 
-    // FOR DELTA TIME CALCULATION
-    sf::Clock clock;
-    //
+    // font + texts for startup error screens
+    sf::Font error_text;
+    error_text.loadFromFile("fonts/DynaPuff-Bold.ttf");
 
-    // LOADING RESOURCES //
-    // 
-    //
-    // LOAD ALL TEXTURES
-    Textures textures;
-    if (!textures.LoadAllTextures()) return -1;
-    //
+    std::vector<sf::Text> startup_error_texts;
+    sf::Text error_text_hint_enter;
+    error_text_hint_enter.setFont(error_text);
+    error_text_hint_enter.setFillColor(sf::Color::White);
+    error_text_hint_enter.setCharacterSize(20);
 
-    // CREATE ALL SPRITES
-    Sprites sprites;
-    sprites.CreateAllSprites(textures);
-    //
+    if (GameStateENUM == GameState::StartupFatalScreen) {
+        for (size_t i = 0; i < fatal_errors.size(); i++) {
+            sf::Text line;
+            line.setFont(error_text);
+            line.setFillColor(sf::Color::Red);
+            line.setCharacterSize(18);
+            line.setString("FATAL ERROR: " + fatal_errors[i]);
+            line.setPosition(30.f, 30.f + static_cast<float>(i) * 30.f);
+            startup_error_texts.push_back(line);
+        }
+        error_text_hint_enter.setString("Game will not start! Press 'Enter' to exit! ");
+        error_text_hint_enter.setPosition(30.f, 30.f + static_cast<float>(fatal_errors.size()) * 30.f + 30.f);
+    }
+    else if (GameStateENUM == GameState::StartupWarningScreen) {
+        for (size_t i = 0; i < warning_errors.size(); i++) {
+            sf::Text line;
+            line.setFont(error_text);
+            line.setFillColor(sf::Color::Yellow);
+            line.setCharacterSize(18);
+            line.setString("WARNING ERROR: " + warning_errors[i]);
+            line.setPosition(30.f, 30.f + static_cast<float>(i) * 30.f);
+            startup_error_texts.push_back(line);
+        }
+        error_text_hint_enter.setString("Game will start! Press 'Enter' to continue! ");
+        error_text_hint_enter.setPosition(30.f, 30.f + static_cast<float>(warning_errors.size()) * 30.f + 30.f);
+    }
 
-    // LOAD ALL POSITIONS OF THE OBJECTS
-    PositionManagement position_management;
-    position_management.PosInit(sprites, textures);
-    //
-    
-    // LOAD ALL AUDIOS
-    //
+
     sf::Music music_buffer_game_loop;
-
 
     sf::SoundBuffer sound_buffer_game_over;
     sf::SoundBuffer sound_buffer_package_collected;
@@ -71,97 +110,133 @@ int main() {
     sf::Sound sound_package_collected;
     sf::Sound sound_package_delivered;
 
+    // load audio files into main's buffers
+    music_buffer_game_loop.openFromFile("sounds/game_loop.ogg");
     sound_buffer_game_over.loadFromFile("sounds/game_over.wav");
     sound_buffer_package_collected.loadFromFile("sounds/package_collected.wav");
     sound_buffer_package_delivered.loadFromFile("sounds/package_delivered.wav");
 
-    sound_game_over.setBuffer(sound_buffer_game_over);
-    sound_game_over.setVolume(100.0f);
+    if (GameStateENUM == GameState::Running) {
+        music_buffer_game_loop.setLoop(true);
+        music_buffer_game_loop.setVolume(50.0f);
+        music_buffer_game_loop.play();
 
-    sound_package_collected.setBuffer(sound_buffer_package_collected);
-    sound_package_collected.setLoop(false);
-    sound_package_collected.setVolume(100.0f);
+        sound_game_over.setBuffer(sound_buffer_game_over);
+        sound_game_over.setVolume(100.0f);
 
-    sound_package_delivered.setBuffer(sound_buffer_package_delivered);
-    sound_package_delivered.setLoop(false);
-    sound_package_delivered.setVolume(100.0f);
+        sound_package_collected.setBuffer(sound_buffer_package_collected);
+        sound_package_collected.setLoop(false);
+        sound_package_collected.setVolume(100.0f);
 
-    music_buffer_game_loop.openFromFile("sounds/game_loop.ogg");
-    music_buffer_game_loop.setLoop(true);
-    music_buffer_game_loop.setVolume(50.0f);
-    music_buffer_game_loop.play();
-    //
-    //
-    // END OF LOADING RESOURCES // 
+        sound_package_delivered.setBuffer(sound_buffer_package_delivered);
+        sound_package_delivered.setLoop(false);
+        sound_package_delivered.setVolume(100.0f);
+    }
 
 
-    // GAME OVER LOGIC
-    bool game_over = false; // flag to check if game is over
-    int score = 0;          // player score
-    bool package_collected = false; // courier can carry ONLY 1 package at a time
-    bool package_delivered = false; // checks if package courier is holding is delivered 
+
+    // game over
+    bool game_over = false; 
+    int score = 0;         
+    bool package_collected = false; 
+    bool package_delivered = false;
 
     sf::RectangleShape black_screen(sf::Vector2f(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)));
     black_screen.setFillColor(sf::Color::Black);
-    //
 
-    // COLLISION LOGIC
+
+    sf::Clock clock;
+    float delta_time = clock.restart().asSeconds();
+
     Collision collision;
-    collision.AddHitBox(sprites);
-    //
+    Sprites sprites;
+    Textures textures;
+    Movement movement;
+    PositionManagement position_management;
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
 
-    // MAP SIZE (SAME AS BACKGROUND)
+    // load game data into main objects (startup check already verified these succeed)
+    if (fatal_errors.empty()) {
+        textures.LoadAllTextures();
+        sprites.CreateAllSprites(textures);
+        position_management.PosInit(sprites, textures);
+        collision.AddHitBox(sprites);
+        movement.PosInit(sprites, textures);
+    }
+
+    NpcSpawnSystem npc_spawn;               
+    PackageCollectSystem package_collect;   
+    PackageDeliverySystem package_delivery;  
+
+    // map size
     const float map_width = 1500.f;
     const float map_height = 1800.f;
-    //
 
-    // CAMERA VIEW SETUP
+
+    // camera view
     sf::View camera(sf::FloatRect(0.f, 0.f, 1280.f, 708.f));
     camera.setCenter(sprites.player.getPosition());
-    camera.zoom(0.4f);// later to adjust again
-    //
+    camera.zoom(0.9f);
 
-    // VEHICLE MOVEMENT SETUP
-    Movement movement;
-    movement.PosInit(sprites, textures);
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
-    //
-
-    // CLOCK WITH REMAINING TIME DISPLAY
+    // clock with time
     ClockDisplay_OBJ.Resize(window.getSize());
     ClockDisplay_OBJ.StartCountdown(); // start with 300 sec
-    //
 
-    // SCORE DISPLAY (TOP-RIGHT)
-    ScoreDisplay_OBJ.Resize(window);
-	ScoreDisplay_OBJ.SetScore(score, window);
-    //
+    // score
+    ScoreDisplay_OBJ.Resize(window.getSize());
 
-    // NPC / PACKAGE SYSTEMS
-    NpcSpawnSystem npc_spawn;                // spawns and animates NPCs
-    PackageCollectSystem package_collect;    // courier -> npc pickup logic
-    PackageDeliverySystem package_delivery;  // courier_house delivery logic
-    //
 
     // MAIN GAME LOOP
     //
     while (window.isOpen()) {
-        sf::Event event; // used as main event handler
+        delta_time = clock.restart().asSeconds();
+        sf::Event event;
 
-        // for window closing btn
         while (window.pollEvent(event)) {
+            // win closing btn
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            // win resize 
             else if (event.type == sf::Event::Resized) {
                 sf::Vector2u NewSize(event.size.width, event.size.height);
-
-                ClockDisplay_OBJ.Resize(NewSize);
-                ScoreDisplay_OBJ.Resize(window);
+                UIView.setSize(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y));
+                UIView.setCenter(static_cast<float>(NewSize.x) / 2.f, static_cast<float>(NewSize.y) / 2.f);
+                black_screen.setSize(sf::Vector2f(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y)));
 
                 if (game_over == true) {
                     UI_GameOver_OBJ.relayout(NewSize);
-                    black_screen.setSize(sf::Vector2f(static_cast<float>(NewSize.x), static_cast<float>(NewSize.y)));
+                    UI_GameOver_OBJ.UpdatePositions(NewSize);
+                }
+                ClockDisplay_OBJ.Resize(NewSize);
+                ScoreDisplay_OBJ.Resize(NewSize);
+            }
+            // startup fatal screen -> Enter exits program
+            else if (GameStateENUM == GameState::StartupFatalScreen) {
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+                    window.close();
+                }
+            }
+            // startup warning screen -> Enter continues to game
+            else if (GameStateENUM == GameState::StartupWarningScreen) {
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+                    GameStateENUM = GameState::Running;
+
+                    // set up audio now that we're entering the Running state
+                    music_buffer_game_loop.setLoop(true);
+                    music_buffer_game_loop.setVolume(50.0f);
+                    music_buffer_game_loop.play();
+
+                    sound_game_over.setBuffer(sound_buffer_game_over);
+                    sound_game_over.setVolume(100.0f);
+
+                    sound_package_collected.setBuffer(sound_buffer_package_collected);
+                    sound_package_collected.setLoop(false);
+                    sound_package_collected.setVolume(100.0f);
+
+                    sound_package_delivered.setBuffer(sound_buffer_package_delivered);
+                    sound_package_delivered.setLoop(false);
+                    sound_package_delivered.setVolume(100.0f);
                 }
             }
             else if (game_over == true) {
@@ -171,13 +246,12 @@ int main() {
             }
         }
 
-        float delta_time = clock.restart().asSeconds();
-
-        if (game_over == false) {
+        if (GameStateENUM == GameState::Running && game_over == false) {
 
             // player movement (NOTE: last parameter controls "carrying package" textures)
             HandlePlayerMovement(sprites.player, 180.0f, map_width, map_height, textures, collision, Animation_OBJ, delta_time, package_collected);
 
+            // vehicle movement update
             // vehicle movement update
             movement.Update(delta_time, sprites, textures);
 
@@ -190,7 +264,6 @@ int main() {
             // NPC spawn + idle animation + expiration penalties
             npc_spawn.Update(delta_time, sprites, textures);
 
-
             bool play_collect_sound = false;
             // collect package (hold inside NPC zone for 2 sec)
             package_collect.Update(delta_time, player_box, npc_spawn, package_collected, play_collect_sound);
@@ -200,7 +273,7 @@ int main() {
 
             // update UI text
             ClockDisplay_OBJ.UpdateText();
-            ScoreDisplay_OBJ.SetScore(score, window);
+            ScoreDisplay_OBJ.UpdateScore(score);
 
             if (play_collect_sound == true) {
                 sound_package_collected.play();
@@ -226,7 +299,7 @@ int main() {
 
             if (hit || ClockDisplay_OBJ.TimesUp()) {
                 game_over = true;
-                window.setView(window.getDefaultView());
+                window.setView(UIView);
                 UI_GameOver_OBJ.setScore(score);
                 UI_GameOver_OBJ.relayout(window.getSize());
                 UI_GameOver_OBJ.UpdatePositions(window.getSize());
@@ -251,8 +324,14 @@ int main() {
 
         window.clear();
 
-        // draw on the old buffer to replace it
-        if(game_over == false) {
+        // startup error screens (fatal or warning)
+        if (GameStateENUM == GameState::StartupFatalScreen || GameStateENUM == GameState::StartupWarningScreen) {
+            window.setView(UIView);
+            window.draw(black_screen);
+            for (const auto& text : startup_error_texts) window.draw(text);
+            window.draw(error_text_hint_enter);
+        }
+        else if (game_over == false) {
             window.setView(camera);
 
             // drawing order
@@ -285,14 +364,13 @@ int main() {
             // NPCs MUST be drawn AFTER buildings (to appear "in front")
             window.draw(npc_spawn);
 
-
             // draw the clock + score in screen space
-            window.setView(window.getDefaultView());
+            window.setView(UIView);
             window.draw(ClockDisplay_OBJ);
             window.draw(ScoreDisplay_OBJ);
         }
         else {
-            window.setView(window.getDefaultView());
+            window.setView(UIView);
             window.draw(black_screen);
             window.draw(UI_GameOver_OBJ);
         }
@@ -300,6 +378,5 @@ int main() {
         window.display();
 
     }
-
     return 0;
 }

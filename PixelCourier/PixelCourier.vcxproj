@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -138,25 +138,38 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Sprites_load.h" />
+    <ClInclude Include="TrespassingAreas.h" />
+    <ClInclude Include="SpritesLoad.h" />
+    <ClCompile Include="SpritesLoad.cpp" />
+    <ClCompile Include="StartupErrorLogs.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TexturesLoad.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Collision.h" />
-    <ClInclude Include="Game_over.h" />
-    <ClInclude Include="Npc-s_spawn.h" />
-    <ClInclude Include="Package_collect.h" />
-    <ClInclude Include="Package_delivery.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="NpcsSpawn.h" />
+    <ClInclude Include="PackageCollect.h" />
+    <ClInclude Include="PackageDelivery.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="resource2.h" />
     <ClInclude Include="Score.h" />
-    <ClInclude Include="TODO.h" />
-    <ClInclude Include="Moving_vehicles.h" />
-    <ClInclude Include="Player_movement.h" />
-    <ClInclude Include="Position_management.h" />
-    <ClInclude Include="Textures_load.h" />
+    <ClInclude Include="MovingVehicles.h" />
+    <ClInclude Include="PlayerMovement.h" />
+    <ClInclude Include="PositionManagement.h" />
+    <ClInclude Include="StartupErrorLogs.h" />
+    <ClInclude Include="TexturesLoad.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>

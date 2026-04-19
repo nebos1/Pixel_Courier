@@ -4,16 +4,12 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Textures_load.h"
-#include "Sprites_load.h"
+#include "TexturesLoad.h"
+#include "SpritesLoad.h"
 
 #include <fstream>
 #include <map>
 #include <string>
-
-
-// TODO: add few more same objects, few more diff + moving cars with collision logic gameover
-
 
 enum NPC_state {
 	idle,
@@ -25,8 +21,9 @@ class PositionManagement {
 public:
 	std::map<sf::Sprite*, sf::Vector2f> ObjectPositions;
 
-	void PosInit(Sprites& sprites, Textures& textures) {
+	bool PosInit(Sprites& sprites, Textures& textures) {
 		std::ifstream file("PixelCourier/position_config.txt");
+		if (!file.is_open()) return false;
 
 
 		ObjectPositions.clear();
@@ -167,7 +164,37 @@ public:
 				sprites.person_2_m1.push_back(sprite);
 				ObjectPositions[&sprites.person_2_m1.back()] = { x_coords, y_coords };
 			}
-			// others later
+			else if (name == "person_2_m2") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_2_m2);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_2_m2.push_back(sprite);
+				ObjectPositions[&sprites.person_2_m2.back()] = { x_coords, y_coords };
+			}
+			else if (name == "person_3_m1") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_3_m1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_3_m1.push_back(sprite);
+				ObjectPositions[&sprites.person_3_m1.back()] = { x_coords, y_coords };
+			} 
+			else if (name == "person_3_m2") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_3_m2);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_3_m2.push_back(sprite);
+				ObjectPositions[&sprites.person_3_m2.back()] = { x_coords, y_coords };
+			}
+			else if (name == "person_4_m1") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_4_m1);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_4_m1.push_back(sprite);
+				ObjectPositions[&sprites.person_4_m1.back()] = { x_coords, y_coords };
+			}
+			else if (name == "person_4_m2") {
+				sf::Sprite sprite; sprite.setTexture(textures.person_4_m2);
+				sprite.setPosition(x_coords, y_coords);
+				sprites.person_4_m2.push_back(sprite);
+				ObjectPositions[&sprites.person_4_m2.back()] = { x_coords, y_coords };
+			}
 		}
+		return true;
 	}
 };

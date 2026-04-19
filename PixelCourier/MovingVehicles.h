@@ -4,8 +4,8 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "Sprites_load.h"
-#include "Textures_load.h"
+#include "SpritesLoad.h"
+#include "TexturesLoad.h"
 
 #include <algorithm>
 #include <string>
@@ -56,14 +56,14 @@ struct LaneConfig {
 	std::string direction;
 	float spawn_interval = rand_interval(0.5f, 1.7f);
 	float accumulator = 0.0f; // accumulated time
-	bool has_lane = false; // falg to check if the lane exist
+	bool has_lane = false; // flag to check if the lane exist
 };
-LaneConfig LaneConfigOBJ;
+inline LaneConfig LaneConfigOBJ;
 
 
 // function to group the vehicles by 2 groups -> left and right moving
 // randomly to take a vehicles from one of the 2 groups, giving it starting_x + position_y and returning a pointer 
-sf::Sprite* RandomSpawningVehicles(Sprites& sprites, Textures& textures, float startX, float posY, const std::string& dir) {
+inline sf::Sprite* RandomSpawningVehicles(Sprites& sprites, Textures& textures, float startX, float posY, const std::string& dir) {
 
 
 	int random_vehicle = rand() % 5; // random vehicle type 0,1,2,3,4
@@ -172,8 +172,9 @@ public:
 	Movement() = default;
 
 	// reading a txt file for getting 1st which lane 
-	void PosInit(Sprites& sprites, Textures& textures) {
+	bool PosInit(Sprites& sprites, Textures& textures) {
 		std::ifstream file("PixelCourier/vehicle_movement.txt");
+		if (!file.is_open()) return false;
 
 		// clear the sprites before filling them with new ones
 		sprites.car_1_left.clear();  
@@ -577,4 +578,4 @@ public:
 	// getter to get access to the active vehicles 
 	std::vector<ActiveVehicles>& getActiveVehicles()  { return active; }
 };
-Movement MovementOBJ;
+inline Movement MovementOBJ;

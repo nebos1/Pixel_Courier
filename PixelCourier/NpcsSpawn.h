@@ -9,8 +9,8 @@
 #include <cstdlib> 
 #include <ctime>    
 
-#include "Textures_load.h"
-#include "Sprites_load.h"
+#include "TexturesLoad.h"
+#include "SpritesLoad.h"
 #include "Timer.h"
 #include "Clock.h"
 
