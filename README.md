@@ -64,3 +64,7 @@ Keep these folders next to the `.exe`:
 
 ### Controls
 - W,A,S,D — Move
+
+
+
+****** I do not think of future improvements on the game, so it may have bugs on the current version! *******
