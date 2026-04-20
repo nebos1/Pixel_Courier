@@ -1,4 +1,4 @@
-## Pixel Courier (v1.0.0-beta) — Windows x64
+## Pixel Courier (v1.0.0-more stable) — Windows x64
 
 Precompiled beta build of the 2D game **Pixel Courier**.
 
