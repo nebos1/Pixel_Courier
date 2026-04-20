@@ -176,7 +176,7 @@ int main() {
     // camera view
     sf::View camera(sf::FloatRect(0.f, 0.f, 1280.f, 708.f));
     camera.setCenter(sprites.player.getPosition());
-    camera.zoom(0.9f);
+    camera.zoom(0.4f);
 
     // clock with time
     ClockDisplay_OBJ.Resize(window.getSize());
