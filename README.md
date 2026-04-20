@@ -22,7 +22,7 @@ If Windows shows a warning like **“Windows protected your PC”**:
 
 ### Requirements
 
-- It runs on Win 7, 8, 8.1, 10, 11 (x64)
+- It runs on Win 10 (x64), 11 (x64)
 - **Microsoft Visual C++ Redistributable 2015–2022 (x64)**  
   Official download: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170  
   Or you can download it from  folder `Distribution PixelCourier\Microsoft Visual Redistributions.`
