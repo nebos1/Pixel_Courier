@@ -18,7 +18,7 @@
 inline float randomize() {
 	return static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
 }
-inline float rand_interval(float a, float b) { 
+inline float rand_interval(float a, float b) {
 	return a + randomize() * (b - a);
 }
 // used for deleting the sprite vehicle from the map
@@ -26,8 +26,8 @@ template <typename Container>
 static bool erase_container(Container& container, sf::Sprite* sprite) {
 	typename Container::iterator it = container.begin();
 	for (; it != container.end(); ++it) {
-		if (&(*it) == sprite) { 
-			container.erase(it); return true; 
+		if (&(*it) == sprite) {
+			container.erase(it); return true;
 		}
 	}
 	return false;
@@ -35,15 +35,15 @@ static bool erase_container(Container& container, sf::Sprite* sprite) {
 // for despawning
 static bool DespawnSprite(Sprites& sprites, sf::Sprite* spr) {
 	return erase_container(sprites.car_1_left, spr) ||
-		   erase_container(sprites.car_1_right, spr) ||
-		   erase_container(sprites.car_2_left, spr) ||
-		   erase_container(sprites.car_2_right, spr) ||
-		   erase_container(sprites.truck_1_left, spr) ||
-		   erase_container(sprites.truck_1_right, spr) ||
-		   erase_container(sprites.pickup_truck_1_left, spr) ||
-		   erase_container(sprites.pickup_truck_1_right, spr) ||
-		   erase_container(sprites.bus_1_left, spr) ||
-		   erase_container(sprites.bus_1_right, spr);
+		erase_container(sprites.car_1_right, spr) ||
+		erase_container(sprites.car_2_left, spr) ||
+		erase_container(sprites.car_2_right, spr) ||
+		erase_container(sprites.truck_1_left, spr) ||
+		erase_container(sprites.truck_1_right, spr) ||
+		erase_container(sprites.pickup_truck_1_left, spr) ||
+		erase_container(sprites.pickup_truck_1_right, spr) ||
+		erase_container(sprites.bus_1_left, spr) ||
+		erase_container(sprites.bus_1_right, spr);
 }
 
 // here are the required configs for vehicles and lanes 
@@ -127,15 +127,15 @@ inline sf::Sprite* RandomSpawningVehicles(Sprites& sprites, Textures& textures, 
 // class with constructor (spawner) and destructor (despawner) for in game spawn, despawn and moving the vehicles across the map
 class ActiveVehicles {
 private:
-	sf::Sprite* sprite{ nullptr }; 
+	sf::Sprite* sprite{ nullptr };
 	float speed;
 	float ending_x;
 	float starting_x;
-	int int_direction { +1 }; // +1 right moving, -1 left moving
+	int int_direction{ +1 }; // +1 right moving, -1 left moving
 
 	sf::FloatRect v_hitbox; // vehicle hitbox for collision detection
 public:
-	ActiveVehicles(sf::Sprite* s, float spd, float startx, float endx, int int_dir) : 
+	ActiveVehicles(sf::Sprite* s, float spd, float startx, float endx, int int_dir) :
 		sprite(s), speed(spd), starting_x(startx), ending_x(endx), int_direction(int_dir) {
 
 	}
@@ -177,15 +177,15 @@ public:
 		if (!file.is_open()) return false;
 
 		// clear the sprites before filling them with new ones
-		sprites.car_1_left.clear();  
-		sprites.car_1_right.clear(); 
-		sprites.car_2_left.clear();  
-		sprites.car_2_right.clear(); 
-		sprites.truck_1_left.clear();  
-		sprites.truck_1_right.clear(); 
-		sprites.pickup_truck_1_left.clear();  
-		sprites.pickup_truck_1_right.clear(); 
-		sprites.bus_1_left.clear(); 
+		sprites.car_1_left.clear();
+		sprites.car_1_right.clear();
+		sprites.car_2_left.clear();
+		sprites.car_2_right.clear();
+		sprites.truck_1_left.clear();
+		sprites.truck_1_right.clear();
+		sprites.pickup_truck_1_left.clear();
+		sprites.pickup_truck_1_right.clear();
+		sprites.bus_1_left.clear();
 		sprites.bus_1_right.clear();
 
 		active.clear();
@@ -194,24 +194,24 @@ public:
 		for (int i = 1; i <= 16; ++i) lanes[i] = LaneConfig{};
 
 
-		while (file >> LaneConfigOBJ.lane >> LaneConfigOBJ.starting_x >> LaneConfigOBJ.ending_x >> 
-					   LaneConfigOBJ.position_y >> LaneConfigOBJ.speed >> LaneConfigOBJ.direction) {
+		while (file >> LaneConfigOBJ.lane >> LaneConfigOBJ.starting_x >> LaneConfigOBJ.ending_x >>
+			LaneConfigOBJ.position_y >> LaneConfigOBJ.speed >> LaneConfigOBJ.direction) {
 
-			
+
 			if (LaneConfigOBJ.lane == 1) {
 				lanes[1] = LaneConfigOBJ; lanes[1].has_lane = true;
-				lanes[1].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[1].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[1].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
 					lanes[1].starting_x, lanes[1].position_y, lanes[1].direction)) {
 					int int_dir = (lanes[1].direction == "left") ? -1 : +1;
-					active.emplace_back(sprite, lanes[1].speed,lanes[1].starting_x, lanes[1].ending_x, int_dir);
+					active.emplace_back(sprite, lanes[1].speed, lanes[1].starting_x, lanes[1].ending_x, int_dir);
 				}
 			}
 			else if (LaneConfigOBJ.lane == 2) {
 				lanes[2] = LaneConfigOBJ; lanes[2].has_lane = true;
-				lanes[2].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[2].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[2].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -222,7 +222,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 3) {
 				lanes[3] = LaneConfigOBJ; lanes[3].has_lane = true;
-				lanes[3].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[3].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[3].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -233,19 +233,19 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 4) {
 				lanes[4] = LaneConfigOBJ; lanes[4].has_lane = true;
-				lanes[4].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[4].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[4].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
 					lanes[4].starting_x, lanes[4].position_y, lanes[4].direction)) {
 					int int_dir = (lanes[4].direction == "left") ? -1 : +1;
 					active.emplace_back(sprite, lanes[4].speed,
-					lanes[4].starting_x, lanes[4].ending_x, int_dir);
+						lanes[4].starting_x, lanes[4].ending_x, int_dir);
 				}
 			}
 			else if (LaneConfigOBJ.lane == 5) {
 				lanes[5] = LaneConfigOBJ; lanes[5].has_lane = true;
-				lanes[5].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[5].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[5].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -256,7 +256,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 6) {
 				lanes[6] = LaneConfigOBJ; lanes[6].has_lane = true;
-				lanes[6].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[6].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[6].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -267,7 +267,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 7) {
 				lanes[7] = LaneConfigOBJ; lanes[7].has_lane = true;
-				lanes[7].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[7].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[7].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -278,7 +278,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 8) {
 				lanes[8] = LaneConfigOBJ; lanes[8].has_lane = true;
-				lanes[8].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[8].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[8].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -289,7 +289,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 9) {
 				lanes[9] = LaneConfigOBJ; lanes[9].has_lane = true;
-				lanes[9].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[9].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[9].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -300,7 +300,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 10) {
 				lanes[10] = LaneConfigOBJ; lanes[10].has_lane = true;
-				lanes[10].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[10].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[10].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -311,7 +311,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 11) {
 				lanes[11] = LaneConfigOBJ; lanes[11].has_lane = true;
-				lanes[11].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[11].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[11].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -322,7 +322,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 12) {
 				lanes[12] = LaneConfigOBJ; lanes[12].has_lane = true;
-				lanes[12].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[12].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[12].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -333,7 +333,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 13) {
 				lanes[13] = LaneConfigOBJ; lanes[13].has_lane = true;
-				lanes[13].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[13].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[13].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -344,7 +344,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 14) {
 				lanes[14] = LaneConfigOBJ; lanes[14].has_lane = true;
-				lanes[14].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[14].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[14].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -355,7 +355,7 @@ public:
 			}
 			else if (LaneConfigOBJ.lane == 15) {
 				lanes[15] = LaneConfigOBJ; lanes[15].has_lane = true;
-				lanes[15].spawn_interval = rand_interval(0.5f, 1.7f); 
+				lanes[15].spawn_interval = rand_interval(0.5f, 1.7f);
 				lanes[15].accumulator = 0.f;
 
 				if (sf::Sprite* sprite = RandomSpawningVehicles(sprites, textures,
@@ -562,8 +562,8 @@ public:
 		while (i < active.size()) {
 			if (active[i].ReachedEnd()) {
 				sf::Sprite* s = active[i].spritePtr();
-				DespawnSprite(sprites, s);            
-				active.erase(active.begin() + i);      
+				DespawnSprite(sprites, s);
+				active.erase(active.begin() + i);
 			}
 			else {
 				++i;
@@ -576,6 +576,6 @@ private:
 	std::vector<ActiveVehicles> active; // vector of active vehicles on the map
 public:
 	// getter to get access to the active vehicles 
-	std::vector<ActiveVehicles>& getActiveVehicles()  { return active; }
+	std::vector<ActiveVehicles>& getActiveVehicles() { return active; }
 };
 inline Movement MovementOBJ;

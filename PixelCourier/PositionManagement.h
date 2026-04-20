@@ -105,48 +105,48 @@ public:
 
 		// buildings
 		it = sprites.house_1.begin();
-		while (it != sprites.house_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.house_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		it = sprites.block_1.begin();
-		while (it != sprites.block_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.block_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		it = sprites.courier_house.begin();
-		while (it != sprites.courier_house.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.courier_house.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		it = sprites.church_1.begin();
-		while (it != sprites.church_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.church_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		// others
 		it = sprites.bush_1.begin();
-		while (it != sprites.bush_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.bush_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		it = sprites.sunbed_1.begin();
-		while (it != sprites.sunbed_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.sunbed_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		it = sprites.blue_umbrella_1.begin();
-		while (it != sprites.blue_umbrella_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.blue_umbrella_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		it = sprites.tree_1.begin();
-		while (it != sprites.tree_1.end()) { 
-			sprites.CollisionObjects.push_back(&*it); ++it; 
+		while (it != sprites.tree_1.end()) {
+			sprites.CollisionObjects.push_back(&*it); ++it;
 		}
 
 		while (file >> name >> x_coords >> y_coords) {
-			if(name == "person_1_m1") {
+			if (name == "person_1_m1") {
 				sf::Sprite sprite; sprite.setTexture(textures.person_1_m1);
 				sprite.setPosition(x_coords, y_coords);
 				sprites.person_1_m1.push_back(sprite);
@@ -175,7 +175,7 @@ public:
 				sprite.setPosition(x_coords, y_coords);
 				sprites.person_3_m1.push_back(sprite);
 				ObjectPositions[&sprites.person_3_m1.back()] = { x_coords, y_coords };
-			} 
+			}
 			else if (name == "person_3_m2") {
 				sf::Sprite sprite; sprite.setTexture(textures.person_3_m2);
 				sprite.setPosition(x_coords, y_coords);

@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-class GameOver : public sf::Drawable{
+class GameOver : public sf::Drawable {
 private:
 	sf::Font font;
 	sf::Text game_over_text;
@@ -43,14 +43,14 @@ public:
 		game_over_text.setFillColor(sf::Color::White);
 		game_over_text.setStyle(sf::Text::Bold);
 		game_over_text.setString("Game Over!");
-		
+
 		hint.setFont(font);
 		hint.setFillColor(sf::Color::White);
 		hint.setString("Press Enter to exit");
 
 		score_text.setFont(font);
 		score_text.setFillColor(sf::Color::White);
-		score_text.setString("Score: 0") ;
+		score_text.setString("Score: 0");
 
 	}
 
@@ -59,7 +59,7 @@ public:
 	}
 
 	// dependable variable for setting positions + all texts size based on window size
-	void relayout(const sf::Vector2u& size ) {
+	void relayout(const sf::Vector2u& size) {
 
 		// calculate the sizes of each text based on window size
 		const unsigned int title_size = std::max<unsigned>(5, static_cast<unsigned int>(size.y * 0.15)); // 15% of the size

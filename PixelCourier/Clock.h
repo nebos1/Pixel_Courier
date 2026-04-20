@@ -81,7 +81,7 @@ public:
 	bool TimesUp() const {
 		return GetSecondsLeft() <= 0;
 	}
-	
+
 	// if window manually resized
 	void Resize(const sf::Vector2u& size) {
 		unsigned int char_size = std::max<unsigned>(12, static_cast<unsigned int>(size.y * 0.045f));

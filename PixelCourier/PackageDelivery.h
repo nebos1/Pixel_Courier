@@ -30,7 +30,7 @@ private:
         sf::Vector2f size(bounds_courier_house.width * scale_zone, bounds_courier_house.height * scale_zone); // the size
         drop_zone.setSize(size);
         drop_zone.setOrigin(size.x, size.y);
-        
+
         // centre the zone
         drop_zone.setPosition(bounds_courier_house.left + bounds_courier_house.width, bounds_courier_house.top + bounds_courier_house.height);
     }

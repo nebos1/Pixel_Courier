@@ -185,10 +185,10 @@ public:
                 for (auto& sprite : sprites.person_4_m2) {
                     StaticHitBox[&sprite] = AdjustHitBox(sprite, width, height, y_offset, x_offset);
                 }
-			}
-		}
-	}
-    
+            }
+        }
+    }
+
     void DrawHitBoxes(sf::RenderWindow& window) {
         for (auto it = StaticHitBox.begin(); it != StaticHitBox.end(); ++it) {
             sf::Sprite* sprite = it->first;
@@ -216,27 +216,27 @@ public:
     }
 
 
-	// taking the updated hitbox position
+    // taking the updated hitbox position
     inline sf::FloatRect UpdatedBox(const sf::Sprite& sprite, const sf::FloatRect& relative) {
         const sf::FloatRect global = sprite.getGlobalBounds();
         return { global.left + relative.left, global.top + relative.top, relative.width, relative.height };
     }
 
-	// getting the player hitbox
+    // getting the player hitbox
     inline sf::FloatRect GetPlayerBox(Sprites& sprites, Collision& collision) {
         auto it = collision.StaticHitBox.find(&sprites.player);
         if (it == collision.StaticHitBox.end()) {
-			return sprites.player.getGlobalBounds(); // if not found, return full bounds
+            return sprites.player.getGlobalBounds(); // if not found, return full bounds
         }
-		// getting the relative hitbox and global bounds to calculate the actual position of the hitbox
+        // getting the relative hitbox and global bounds to calculate the actual position of the hitbox
         const sf::FloatRect relative = it->second;
-        const sf::FloatRect global = sprites.player.getGlobalBounds(); 
-        return { 
-            global.left + relative.left, global.top + relative.top, relative.width, relative.height 
+        const sf::FloatRect global = sprites.player.getGlobalBounds();
+        return {
+            global.left + relative.left, global.top + relative.top, relative.width, relative.height
         };
     }
 
-	// checking for collision for player with any vehicle
+    // checking for collision for player with any vehicle
     inline bool PlayerHitsAnyVehicle(const std::list<sf::Sprite>& vehicles, const std::string& TypeName, const std::map<std::string, VehicleHitBoxConfig>& vhbc, const sf::FloatRect& PlayerBox) {
         auto it = vhbc.find(TypeName);
         if (it == vhbc.end()) return false;

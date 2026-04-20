@@ -138,7 +138,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClInclude Include="TrespassingAreas.h" />
     <ClInclude Include="SpritesLoad.h" />
     <ClCompile Include="SpritesLoad.cpp" />
     <ClCompile Include="StartupErrorLogs.cpp">

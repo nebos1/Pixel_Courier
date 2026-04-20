@@ -48,5 +48,5 @@ public:
 
 		PositionTopLeftBelowClock(score_text);
 	}
-}; 
+};
 ScoreDisplay ScoreDisplay_OBJ;

@@ -1,4 +1,4 @@
-courier_house 20 1680
+courier_house 50 1620
 player 100 1750
 
 
@@ -25,6 +25,78 @@ blue_umbrella_1 1350 1600
 blue_umbrella_1 1370 1560
 
 
+tree_1 260 1508
+tree_1 260 1580
+tree_1 260 1652
+tree_1 260 1724
+tree_1 386 1472
+tree_1 386 1544
+tree_1 386 1616
+tree_1 386 1688
+tree_1 428 1508
+tree_1 428 1580
+tree_1 428 1652
+tree_1 428 1724
+tree_1 554 1472
+tree_1 554 1544
+tree_1 554 1616
+tree_1 554 1688
+tree_1 596 1508
+tree_1 596 1580
+tree_1 596 1724
+tree_1 722 1472
+tree_1 722 1544
+tree_1 722 1616
+tree_1 722 1688
+tree_1 764 1508
+tree_1 764 1580
+tree_1 764 1652
+tree_1 764 1724
+tree_1 890 1472
+tree_1 890 1544
+tree_1 890 1616
+tree_1 890 1688
+tree_1 932 1508
+tree_1 932 1580
+tree_1 932 1652
+tree_1 932 1724
+bush_1 302 1472
+bush_1 302 1544
+bush_1 302 1616
+bush_1 302 1688
+bush_1 344 1508
+bush_1 344 1580
+bush_1 344 1652
+bush_1 344 1724
+bush_1 470 1472
+bush_1 470 1544
+bush_1 470 1616
+bush_1 470 1688
+bush_1 512 1508
+bush_1 512 1580
+bush_1 512 1652
+bush_1 512 1724
+bush_1 596 1652
+bush_1 638 1472
+bush_1 638 1544
+bush_1 638 1616
+bush_1 638 1688
+bush_1 680 1508
+bush_1 680 1580
+bush_1 680 1652
+bush_1 680 1724
+bush_1 806 1472
+bush_1 806 1544
+bush_1 806 1616
+bush_1 806 1688
+bush_1 848 1508
+bush_1 848 1580
+bush_1 848 1652
+bush_1 848 1724
+bush_1 974 1472
+bush_1 974 1544
+bush_1 974 1616
+bush_1 974 1688
 
 
 

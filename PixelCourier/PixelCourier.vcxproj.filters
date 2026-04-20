@@ -83,9 +83,6 @@
     <ClInclude Include="StartupErrorLogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TrespassingAreas.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PixelCourier1.rc">

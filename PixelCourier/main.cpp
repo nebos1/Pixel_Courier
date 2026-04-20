@@ -136,9 +136,9 @@ int main() {
 
 
     // game over
-    bool game_over = false; 
-    int score = 0;         
-    bool package_collected = false; 
+    bool game_over = false;
+    int score = 0;
+    bool package_collected = false;
     bool package_delivered = false;
 
     sf::RectangleShape black_screen(sf::Vector2f(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)));
@@ -164,9 +164,9 @@ int main() {
         movement.PosInit(sprites, textures);
     }
 
-    NpcSpawnSystem npc_spawn;               
-    PackageCollectSystem package_collect;   
-    PackageDeliverySystem package_delivery;  
+    NpcSpawnSystem npc_spawn;
+    PackageCollectSystem package_collect;
+    PackageDeliverySystem package_delivery;
 
     // map size
     const float map_width = 1500.f;

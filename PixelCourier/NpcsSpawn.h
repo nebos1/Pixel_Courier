@@ -168,14 +168,14 @@ public:
         }
     }
 
-    NpcSlot* GetSlots() { 
-        return slots; 
+    NpcSlot* GetSlots() {
+        return slots;
     }
-    const NpcSlot* GetSlots() const { 
-        return slots; 
+    const NpcSlot* GetSlots() const {
+        return slots;
     }
-    int GetSlotCount() const { 
-        return 3; 
+    int GetSlotCount() const {
+        return 3;
     }
 
     void DrawDebugZones(sf::RenderTarget& target) const {
